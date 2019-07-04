@@ -144,7 +144,7 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
     data_2d_global_arg[condition, 2] = rectangle_id
 
 
-path = '/Users/Juan/django_projects/adaptive-boxes/data/voxel_complex_shape.ply'
+path = './data/voxel_complex_shape.ply'
 ply_data = PlyData.read(path)
 
 # vertex
