@@ -41,7 +41,7 @@ def plot_rectangle(rec_arg, sep_to_plot_arg, max_area_arg):
     p4 = np.array([rec_arg.x2 + sep_to_plot_arg, rec_arg.y2 + sep_to_plot_arg])
 
     ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1], linewidth=(0.6*(rec_arg.get_area()/max_area_arg) + 0.3))
+    plt.plot(ps[:, 0], ps[:, 1], linewidth=(0.6*(rec_arg.get_area()/max_area_arg) + 0.15))
 
 
 class Rectangle:
@@ -254,7 +254,7 @@ if False:
 # Init Parallel
 pool = []
 if __name__ == '__main__':
-    pool = Pool(10)
+    pool = Pool()
     print('Processes in Pool: ' + str(pool._processes))
 
 # Create Global Matrix of points: []
@@ -278,7 +278,7 @@ while True:
     if len(data_2d) == 0:
         break
 
-    n_searches = 100
+    n_searches = 200
 
     # Find Rectangles -- Loop Serial ---
     # start = time.time()
