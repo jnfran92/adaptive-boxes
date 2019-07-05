@@ -146,31 +146,11 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
     data_2d_global_arg[condition, 2] = rectangle_id
 
 
-path = './data/voxel_complex_shape.ply'
-ply_data = PlyData.read(path)
+path = './data/complex2.npy'
 
-# vertex
-vertex = ply_data.elements[0].data
-vertex_new = pd.DataFrame(vertex)
-vertex_pos = vertex_new.loc[:, ['x', 'y', 'z']]
-
-# plot_vertex_3d(vertex_pos)
-
-# Handle z-data
-z_min = vertex_pos.z.min()
-z_max = vertex_pos.z.max()
-
-# z-scale
-z_scale = vertex_pos.z.drop_duplicates()
-z_scale.reset_index(drop=True, inplace=True)
-z_scale = np.sort(z_scale)
-
-# Get Bottom
-z_level = 0
-vertex_bottom_set = vertex_pos[vertex_pos.z == z_scale[z_level]]
-
-# plot_vertex_2d(vertex_bottom_set)
-
+np_data = np.load(path)
+vertex_bottom_set = pd.DataFrame(np_data)
+vertex_bottom_set.columns = ['x', 'y', 'z']
 
 rectangles_list = []
 n_tests = 10
