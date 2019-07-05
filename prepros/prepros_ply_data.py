@@ -4,7 +4,7 @@ from plyfile import PlyData
 import pandas as pd
 import numpy as np
 
-if len(sys.argv)<4:
+if len(sys.argv) < 3:
     print("ERROR: args error: Needed: \n[1]in_path(with file.ply) \n[2]out_path (with file.npy at end)")
     sys.exit()
 
