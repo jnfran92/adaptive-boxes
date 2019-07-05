@@ -26,20 +26,22 @@ def plot_vertex_2d(vertex_data):
 # Plot the rectangles
 # recs_arg: List of Rectangles[Rectangle class]
 def plot_rectangles(recs_arg, sep_value_arg):
+    max_area_val = np.max([item.get_area() for item in recs_arg])
+
     plt.figure()
     sep_to_plot = sep_value_arg / 2
     for rec_val in recs_arg:
-        plot_rectangle(rec_val, sep_to_plot)
+        plot_rectangle(rec_val, sep_to_plot, max_area_val)
 
 
-def plot_rectangle(rec_arg, sep_to_plot_arg):
+def plot_rectangle(rec_arg, sep_to_plot_arg, max_area_arg):
     p1 = np.array([rec_arg.x1 - sep_to_plot_arg, rec_arg.y1 - sep_to_plot_arg])
     p2 = np.array([rec_arg.x1 - sep_to_plot_arg, rec_arg.y2 + sep_to_plot_arg])
     p3 = np.array([rec_arg.x2 + sep_to_plot_arg, rec_arg.y1 - sep_to_plot_arg])
     p4 = np.array([rec_arg.x2 + sep_to_plot_arg, rec_arg.y2 + sep_to_plot_arg])
 
     ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1])
+    plt.plot(ps[:, 0], ps[:, 1], linewidth=(0.6*(rec_arg.get_area()/max_area_arg) + 0.3))
 
 
 class Rectangle:
@@ -187,80 +189,78 @@ sep_value = get_separation_value(data_2d_global)
 print(sep_value)
 
 
+if False:
+    # Init
+    # Create Global Matrix of points: []
+    data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
+    # Get separation Value
+    sep_value = get_separation_value(data_2d_global)
+    print(sep_value)
+
+    n_sqr = 0
+    n_sqr_empty = 0
+    recs = []
+
+    #   Loop
+    start = time.time()
+    while True:
+        # Select Data which is empty
+        condition_sqr = data_2d_global[:, 2] == n_sqr_empty
+        data_2d = data_2d_global[condition_sqr, :]
+
+        # Break condition
+        if len(data_2d) == 0:
+            break
+
+        n_searches = 100
+
+        # Find Rectangles -- Loop Serial ---
+        # start = time.time()
+
+        # start_args = time.time()
+        # Create args
+        r_args = []
+        for i in range(n_searches):
+            rand_point = int(np.random.rand() * len(data_2d))
+            init_x = data_2d[rand_point][0]
+            init_y = data_2d[rand_point][1]
+            r_args.append(FindRectangleArgs(data_2d, sep_value, init_y, init_x))
+        # end_args = time.time()
+
+        recs_temp = []
+        for i in range(n_searches):
+            # Find the Rectangle
+            rec = find_rectangle(r_args[i])
+            recs_temp.append(rec)
+
+        # features array = [index, area, side_ratio]
+        features = np.zeros(shape=[n_searches, 3])
+
+        for i in range(n_searches):
+            features[i, 0] = i
+            features[i, 1] = recs_temp[i].get_area()
+            features[i, 2] = recs_temp[i].get_side_ratio()
+
+        # Max
+        max_sqr_index = np.where(features[:, 1] == features[:, 1].max())[0][0]
+
+        n_sqr += 1
+        save_rectangle(data_2d_global, recs_temp[max_sqr_index], n_sqr)
+
+        recs.append(recs_temp[max_sqr_index])
+        # sep_to_plot = sep_value / 2
+        # plot_rectangle(recs_temp[max_sqr_index], sep_to_plot)
 
 
-# Init
-# Create Global Matrix of points: []
-data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
-# Get separation Value
-sep_value = get_separation_value(data_2d_global)
-print(sep_value)
-
-n_sqr = 0
-n_sqr_empty = 0
-recs = []
-
-#   Loop
-start = time.time()
-while True:
-    # Select Data which is empty
-    condition_sqr = data_2d_global[:, 2] == n_sqr_empty
-    data_2d = data_2d_global[condition_sqr, :]
-
-    # Break condition
-    if len(data_2d) == 0:
-        break
-
-    n_searches = 100
-
-    # Find Rectangles -- Loop Serial ---
-    # start = time.time()
-
-    # start_args = time.time()
-    # Create args
-    r_args = []
-    for i in range(n_searches):
-        rand_point = int(np.random.rand() * len(data_2d))
-        init_x = data_2d[rand_point][0]
-        init_y = data_2d[rand_point][1]
-        r_args.append(FindRectangleArgs(data_2d, sep_value, init_y, init_x))
-    # end_args = time.time()
-
-    recs_temp = []
-    for i in range(n_searches):
-        # Find the Rectangle
-        rec = find_rectangle(r_args[i])
-        recs_temp.append(rec)
-
-    # features array = [index, area, side_ratio]
-    features = np.zeros(shape=[n_searches, 3])
-
-    for i in range(n_searches):
-        features[i, 0] = i
-        features[i, 1] = recs_temp[i].get_area()
-        features[i, 2] = recs_temp[i].get_side_ratio()
-
-    # Max
-    max_sqr_index = np.where(features[:, 1] == features[:, 1].max())[0][0]
-
-    n_sqr += 1
-    save_rectangle(data_2d_global, recs_temp[max_sqr_index], n_sqr)
-
-    recs.append(recs_temp[max_sqr_index])
-    # sep_to_plot = sep_value / 2
-    # plot_rectangle(recs_temp[max_sqr_index], sep_to_plot)
+    end = time.time()
+    print('Work Finished!!!')
+    print('Elapsed time: ' + str(end - start))
 
 
-end = time.time()
-print('Work Finished!!!')
-print('Elapsed time: ' + str(end - start))
+    plot_rectangles(recs, sep_value)
+    plt.savefig('./' + 'heuristic_serial' + '.png', dpi=900)
 
-plot_rectangles(recs, sep_value)
-
-
-# plot_rectangles(recs_temp)
-
-
+    # plot_rectangles(recs_temp)
 
 
 
@@ -268,7 +268,7 @@ plot_rectangles(recs, sep_value)
 # Init Parallel
 pool = []
 if __name__ == '__main__':
-    pool = Pool()
+    pool = Pool(10)
     print('Processes in Pool: ' + str(pool._processes))
 
 # Create Global Matrix of points: []
@@ -333,3 +333,4 @@ print('Work Finished!!!')
 print('Elapsed time: ' + str(end - start))
 
 plot_rectangles(recs, sep_value)
+plt.savefig('./' + 'heuristic_parallel' + '.png', dpi=900)
