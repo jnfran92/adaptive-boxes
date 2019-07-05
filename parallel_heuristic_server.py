@@ -1,4 +1,4 @@
-
+import sys
 import time
 
 import matplotlib.pyplot as plt
@@ -146,9 +146,15 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
     data_2d_global_arg[condition, 2] = rectangle_id
 
 
-path = './data/complex.npy'
+if len(sys.argv) < 3:
+    print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(with file.jpg)')
+    sys.exit()
 
-np_data = np.load(path)
+
+in_path = str(sys.argv[1])
+out_path = str(sys.argv[2])
+
+np_data = np.load(in_path)
 vertex_bottom_set = pd.DataFrame(np_data)
 vertex_bottom_set.columns = ['x', 'y', 'z']
 
@@ -313,4 +319,4 @@ print('Work Finished!!!')
 print('Elapsed time: ' + str(end - start))
 
 plot_rectangles(recs, sep_value)
-plt.savefig('./' + 'heuristic_parallel' + '.png', dpi=900)
+plt.savefig(out_path, dpi=900)
