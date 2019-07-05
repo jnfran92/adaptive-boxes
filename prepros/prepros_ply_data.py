@@ -5,14 +5,13 @@ import pandas as pd
 import numpy as np
 
 if len(sys.argv)<4:
-    print("ERROR: args error: Needed: \n[1]in_path(with file.ply) \n[2]out_path \n[3]file name(.npy at end)")
+    print("ERROR: args error: Needed: \n[1]in_path(with file.ply) \n[2]out_path (with file.npy at end)")
     sys.exit()
 
 in_path = str(sys.argv[1])
 out_path = str(sys.argv[2])
-out_filename = str(sys.argv[3])
 
-print("Args summary: " + '\n In Path:' + in_path + '\n Out Path:' + out_path + '/' + out_filename)
+print("Args summary: " + '\n In Path:' + in_path + '\n Out Path:' + out_path)
 
 ply_data = PlyData.read(in_path)
 
@@ -38,4 +37,4 @@ vertex_bottom_set = vertex_pos[vertex_pos.z == z_scale[z_level]]
 
 data_to_save = np.array(vertex_bottom_set)
 
-np.save(out_path + '/' + out_filename, data_to_save)
+np.save(out_path, data_to_save)
