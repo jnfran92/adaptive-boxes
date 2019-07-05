@@ -146,7 +146,7 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
     data_2d_global_arg[condition, 2] = rectangle_id
 
 
-path = './data/complex2.npy'
+path = './data/complex.npy'
 
 np_data = np.load(path)
 vertex_bottom_set = pd.DataFrame(np_data)
