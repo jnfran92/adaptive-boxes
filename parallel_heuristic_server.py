@@ -43,25 +43,25 @@ def plot_rectangle(rec_arg, sep_to_plot_arg, max_area_arg):
     ps = np.array([p1, p2, p4, p3, p1])
     plt.plot(ps[:, 0], ps[:, 1], linewidth=(0.6*(rec_arg.get_area()/max_area_arg) + 0.15))
 
-
-class Rectangle:
-
-    def __init__(self, x1_arg, x2_arg, y1_arg, y2_arg):
-        self.x1 = x1_arg
-        self.x2 = x2_arg
-        self.y1 = y1_arg
-        self.y2 = y2_arg
-        self.a = abs(x2_arg - x1_arg)
-        self.b = abs(y2_arg - y1_arg)
-
-    def get_area(self):
-        return self.a * self.b
-
-    def get_side_ratio(self):
-        if self.b == 0:
-            return 0
-        else:
-            return self.a / self.b
+#
+# class Rectangle:
+#
+#     def __init__(self, x1_arg, x2_arg, y1_arg, y2_arg):
+#         self.x1 = x1_arg
+#         self.x2 = x2_arg
+#         self.y1 = y1_arg
+#         self.y2 = y2_arg
+#         self.a = abs(x2_arg - x1_arg)
+#         self.b = abs(y2_arg - y1_arg)
+#
+#     def get_area(self):
+#         return self.a * self.b
+#
+#     def get_side_ratio(self):
+#         if self.b == 0:
+#             return 0
+#         else:
+#             return self.a / self.b
 
 
 class FindRectangleArgs:
@@ -147,7 +147,7 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
 
 
 if len(sys.argv) < 3:
-    print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(with file.jpg)')
+    print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(without .jpg or .json just filename)')
     sys.exit()
 
 
@@ -319,4 +319,17 @@ print('Work Finished!!!')
 print('Elapsed time: ' + str(end - start))
 
 plot_rectangles(recs, sep_value)
-plt.savefig(out_path, dpi=900)
+plt.savefig(out_path + '.jpg', dpi=900)
+
+
+# Save best data set
+best_set = recs
+array_to_save = np.zeros(shape=[len(best_set), 4])
+
+for x in range(len(best_set)):
+    array_to_save[x, 0] = best_set[x].x1
+    array_to_save[x, 1] = best_set[x].x2
+    array_to_save[x, 2] = best_set[x].y1
+    array_to_save[x, 3] = best_set[x].y2
+
+save_to_json(out_path + '.json', array_to_save, sep_value)
