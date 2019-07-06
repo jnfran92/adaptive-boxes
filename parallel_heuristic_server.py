@@ -103,7 +103,7 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
 
 
 if len(sys.argv) < 3:
-    print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(without .jpg or .json just filename)')
+    print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(with .json)')
     sys.exit()
 
 
@@ -212,7 +212,7 @@ for x in range(len(best_set)):
     array_to_save[x, 2] = best_set[x].y1
     array_to_save[x, 3] = best_set[x].y2
 
-save_to_json(out_path + '.json', array_to_save, sep_value)
+save_to_json(out_path, array_to_save, sep_value)
 
 
 # Serial
