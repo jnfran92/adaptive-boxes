@@ -293,6 +293,7 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+# array order: [x1, x2, y1, y2]
 def save_to_json(path, array_to_save, sep_value):
     json_dump = json.dumps({'data': array_to_save, 'sep_value': sep_value}, cls=NumpyEncoder)
     outfile = open(path, 'w', encoding='utf-8')
