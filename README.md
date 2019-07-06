@@ -1,6 +1,5 @@
 # Adaptive-Boxes
-
-Python library for rectangle covering in 2D
+Python Library for rectangular covering in 2D binary images!
 
 ## Content
 
