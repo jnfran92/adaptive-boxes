@@ -63,5 +63,5 @@ for jd in json_data:
 
 
 plot_rectangles(recs, sep_value)
-plt.savefig(out_path, dpi=2500)
+plt.savefig(out_path, dpi=3000)
 
