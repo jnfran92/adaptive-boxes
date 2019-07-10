@@ -37,7 +37,7 @@ def plot_rectangle(rec_arg, sep_to_plot_arg, max_area_arg, ax):
     line_w = np.log2(area_ratio)/max_log
     plt.plot(ps[:, 0], ps[:, 1], linewidth=0.2*line_w + 0.08, c='r')
 
-    rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color='black', lw=0)
+    rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color='yellow', lw=0)
     ax.add_patch(rect)
 
 
