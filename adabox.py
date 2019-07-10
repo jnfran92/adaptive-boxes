@@ -4,6 +4,7 @@ from multiprocessing import Pool
 
 from lib.tools import *
 
+
 class FindRectangleArgs:
     def __init__(self, data_2d_arg, sep_value_arg, init_y_arg, init_x_arg):
         self.data_2d_arg = data_2d_arg
@@ -13,11 +14,13 @@ class FindRectangleArgs:
 
 
 def find_rectangle(find_rectangle_args: FindRectangleArgs):
+    # args:
     data_2d_arg = find_rectangle_args.data_2d_arg
     sep_value_arg = find_rectangle_args.sep_value_arg
     init_y_arg = find_rectangle_args.init_y_arg
     init_x_arg = find_rectangle_args.init_x_arg
 
+    # work:
     all_x_points = np.sort(data_2d_arg[data_2d_arg[:, 1] == init_y_arg], axis=0)
     all_y_points = np.sort(data_2d_arg[data_2d_arg[:, 0] == init_x_arg], axis=0)
 

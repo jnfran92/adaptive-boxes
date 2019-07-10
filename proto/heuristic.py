@@ -2,7 +2,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from plyfile import PlyData
-from heuristic.lib.tools import *
+from lib.tools import *
+
 
 def plot_vertex_3d(vertex_data):
     fig = plt.figure()
@@ -15,7 +16,8 @@ def plot_vertex_2d(vertex_data):
     plt.figure()
     plt.scatter(vertex_data.x, vertex_data.y, vertex_data.z, c='r', marker='o')
 
-path = '/Users/Juan/django_projects/py-ard/heuristic/data/mehra.ply'
+
+path = '/Users/Juan/django_projects/adaptive-boxes/data_raw/mera.ply'
 ply_data = PlyData.read(path)
 
 # vertex
