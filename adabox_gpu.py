@@ -56,17 +56,24 @@ b = np.array([[1, 1, 1],
 r = a.dot(b)
 
 
+
+# Plot
+fig = plt.figure(figsize=(6, 3.2))
+ax = fig.add_subplot(111)
+plt.imshow(data_matrix)
+ax.set_aspect('equal')
+
+
 # Flatten Matrix
 data_matrix_f = data_matrix.flatten()
 
 # Kernel Data
 
-dim3_block_x = data_matrix.shape[0]
-dim3_block_y = data_matrix.shape[1]
+dim3_block_x = data_matrix.shape[1]
+dim3_block_y = data_matrix.shape[0]
 
 block_dim_y = dim3_block_y
 block_dim_x = dim3_block_x
-
 
 # KERNEL
 # Kernel non-editable - they go in for-loop
@@ -77,28 +84,53 @@ thread_idx_x = 0
 thread_idx_y = 0
 
 # Kernel editable
-i = thread_idx_y
-j = thread_idx_x
+# Params
+distances = np.zeros(shape=[data_matrix_f.shape[0]])    # Could be stored in Cache- Shared Memory
+idx_i = 0   # y rand point
+idx_j = 1   # x rand point
+plt.scatter(idx_j, idx_i, c='r')
 
-g_i = block_dim_y * block_idx_y + i
-g_j = block_dim_x * block_dim_x + j
+# Run Kernel
+for thread_idx_y in range(block_dim_y):
+    for thread_idx_x in range(block_dim_x):
+        # print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+        i = thread_idx_y
+        j = thread_idx_x
 
-m = block_dim_y
-n = block_dim_x
+        g_i = block_dim_y * block_idx_y + i
+        g_j = block_dim_x * block_idx_x + j
 
-idx_i = 0
-idx_j = 1
+        m = block_dim_y
+        n = block_dim_x
 
-mat_val = data_matrix_f[m*i + j]
+        plt.scatter(j, i, c='b', marker='x')
 
-distance_j = abs(g_j - j)
+        mat_val = data_matrix_f[m*i + j]
+
+        distance_j = (j - idx_j) * mat_val
+        print('i: ' + str(i) + '  j: ' + str(j) + '   distance  ' + str(distance_j))
+
+        if distance_j > 0:
+            distances[i*n + j] = distance_j
+
+# Break
+# Get min distance in left - Atomic can be used(In this case: min() function)
+for thread_idx_y in range(block_dim_y):
+    for thread_idx_x in range(block_dim_x):
+        # print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+        i = thread_idx_y
+        j = thread_idx_x
+
+        g_i = block_dim_y * block_idx_y + i
+        g_j = block_dim_x * block_idx_x + j
+
+        m = block_dim_y
+        n = block_dim_x
+
+        if(j == 0):
+            distances[i*n + 0: i*n + m]
 
 
-# if mat_val == 0:
-#     if idx_j > j_g:
-#         print('idx_j is at left')
-#     else:
-#         print('idx_j is at right')
 
-
+distance_r = distances.min()
 
