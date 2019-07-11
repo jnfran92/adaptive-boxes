@@ -27,42 +27,6 @@ plt.imshow(data_matrix)
 ax.set_aspect('equal')
 
 
-# init
-a = data_matrix[0, :]
-b = data_matrix[1, :]
-
-
-
-matmul = data_matrix.dot(data_matrix.T)
-
-
-# Plot
-fig = plt.figure(figsize=(6, 3.2))
-ax = fig.add_subplot(111)
-plt.imshow(matmul)
-ax.set_aspect('equal')
-
-
-a = np.array([[1, 0, 1],
-              [1, 1, 1],
-              [1, 1, 1],
-              ])
-
-b = np.array([[1, 1, 1],
-              [1, 1, 1],
-              [1, 1, 0],
-              ])
-
-r = a.dot(b)
-
-
-
-# Plot
-fig = plt.figure(figsize=(6, 3.2))
-ax = fig.add_subplot(111)
-plt.imshow(data_matrix)
-ax.set_aspect('equal')
-
 
 # Flatten Matrix
 data_matrix_f = data_matrix.flatten()
@@ -86,7 +50,7 @@ thread_idx_y = 0
 # Kernel editable
 # Params
 distances = np.zeros(shape=[data_matrix_f.shape[0]])    # Could be stored in Cache- Shared Memory
-idx_i = 0   # y rand point
+idx_i = 1   # y rand point
 idx_j = 1   # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
@@ -113,14 +77,28 @@ for thread_idx_y in range(block_dim_y):
         distance_i = (i - idx_i) * val_in_b * val_in_a
         print('i: ' + str(i) + '  j: ' + str(j) + '   distance  ' + str(distance_j))
 
-        if distance_j > 0:
-            distances[i * n + j] = abs(distance_j) + abs(distance_i)
+        # if distance_j > 0:
+        distances[i * n + j] = distance_j
+        #     distances[i * n + j] = distance_j
+
+        # if j == idx_j:
+        #     distances[i * n + j] = distance_j + distance_i
 
 print(distances.reshape([m, n]))
-
+distances_matrix = distances.reshape([m, n])
 
 # Break
 # Get min distance in left - Atomic can be used(In this case: min() function)
+
+distances_matrix = distances.reshape([m, n])
+
+idx_d = 1
+distances_matrix[idx_d, :].max()
+distances_matrix[idx_d, :].min()
+
+
+
+
 for thread_idx_y in range(block_dim_y):
     for thread_idx_x in range(block_dim_x):
         # print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
@@ -137,4 +115,77 @@ for thread_idx_y in range(block_dim_y):
             distances[i*n + 0: i*n + m]
 
 
+
+# Plot
+fig = plt.figure(figsize=(6, 3.2))
+ax = fig.add_subplot(111)
+plt.imshow(data_matrix)
+ax.set_aspect('equal')
+
+
+
+idx_i = 5   # y rand point
+idx_j = 5   # x rand point
+
+plt.scatter(idx_j, idx_i, c='r')
+
+# right_bottom
+step_j = 0
+first_step_i = 0
+
+while True:
+    i = idx_i
+    j = idx_j + step_j
+
+    if j == n:
+        break
+
+    temp_val = data_matrix[i, j]
+    if temp_val == 0:
+        break
+
+    step_i = 0
+    while True:
+        i = idx_i + step_i
+
+        if i == m:
+            break
+
+        # print(i)
+        temp_val = data_matrix[i, j]
+        # print(temp_val)
+        # plt.scatter(j, i, c='g', marker='x')
+
+        if temp_val == 0:
+            break
+
+        step_i += 1
+
+    if step_j == 0:
+        first_step_i = step_i
+    else:
+        if step_i < first_step_i:
+            break
+
+    plt.scatter(j, idx_i, c='g', marker='x')
+    plt.scatter(j, idx_i + first_step_i - 1, c='g', marker='x')
+
+    step_j += 1
+
+
+
+# Results and plot
+
+x1 = idx_j
+y1 = idx_i
+x2 = idx_j + step_j - 1
+y2 = idx_i + first_step_i - 1
+
+p1 = np.array([x1, y1])
+p2 = np.array([x1, y2])
+p3 = np.array([x2, y1])
+p4 = np.array([x2, y2])
+ps = np.array([p1, p2, p4, p3, p1])
+
+plt.plot(ps[:, 0], ps[:, 1], c='b')
 
