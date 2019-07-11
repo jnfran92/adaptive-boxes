@@ -113,9 +113,8 @@ for thread_idx_y in range(block_dim_y):
         distance_i = (i - idx_i) * val_in_b * val_in_a
         print('i: ' + str(i) + '  j: ' + str(j) + '   distance  ' + str(distance_j))
 
-        # if distance_j > 0:
-        #     distances[i*n + j] = distance_j
-        distances[i * n + j] = abs(distance_j) + abs(distance_i)
+        if distance_j > 0:
+            distances[i * n + j] = abs(distance_j) + abs(distance_i)
 
 print(distances.reshape([m, n]))
 
