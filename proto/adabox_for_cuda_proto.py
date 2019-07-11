@@ -326,7 +326,7 @@ ax = fig.add_subplot(111)
 plt.imshow(data_matrix)
 ax.set_aspect('equal')
 
-idx_i = 5   # y rand point
+idx_i = 6   # y rand point
 idx_j = 5   # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
@@ -379,10 +379,10 @@ plt.plot(ps[:, 0], ps[:, 1], c='b')
 
 # coords[]
 pr = coords[[0, 1], 1].min()
-pl = coords[[2, 3], 1].min()
+pl = coords[[2, 3], 1].max()
 
 pb = coords[[0, 2], 3].min()
-pt = coords[[1, 3], 3].min()
+pt = coords[[1, 3], 3].max()
 
 
 # final x1x2 and y1y2
