@@ -88,6 +88,7 @@ thread_idx_y = 0
 distances = np.zeros(shape=[data_matrix_f.shape[0]])    # Could be stored in Cache- Shared Memory
 idx_i = 0   # y rand point
 idx_j = 1   # x rand point
+
 plt.scatter(idx_j, idx_i, c='r')
 
 # Run Kernel
@@ -105,13 +106,19 @@ for thread_idx_y in range(block_dim_y):
 
         plt.scatter(j, i, c='b', marker='x')
 
-        mat_val = data_matrix_f[m*i + j]
+        val_in_b = data_matrix_f[n * i + j]
+        val_in_a = data_matrix_f[n * i + idx_j]
 
-        distance_j = (j - idx_j) * mat_val
+        distance_j = (j - idx_j) * val_in_b * val_in_a
+        distance_i = (i - idx_i) * val_in_b * val_in_a
         print('i: ' + str(i) + '  j: ' + str(j) + '   distance  ' + str(distance_j))
 
-        if distance_j > 0:
-            distances[i*n + j] = distance_j
+        # if distance_j > 0:
+        #     distances[i*n + j] = distance_j
+        distances[i * n + j] = abs(distance_j) + abs(distance_i)
+
+print(distances.reshape([m, n]))
+
 
 # Break
 # Get min distance in left - Atomic can be used(In this case: min() function)
@@ -131,6 +138,4 @@ for thread_idx_y in range(block_dim_y):
             distances[i*n + 0: i*n + m]
 
 
-
-distance_r = distances.min()
 
