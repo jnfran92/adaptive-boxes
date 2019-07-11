@@ -287,7 +287,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg):
         while True:
             i = idx_i_arg - step_i
 
-            if i == m:
+            if i == -1:
                 break
 
             # print(i)
@@ -307,14 +307,14 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg):
                 break
 
         plt.scatter(j, idx_i_arg, c='g', marker='x')
-        plt.scatter(j, idx_i_arg + first_step_i - 1, c='g', marker='x')
+        plt.scatter(j, idx_i_arg - first_step_i + 1, c='g', marker='x')
 
         step_j += 1
 
     x1_val = idx_j_arg
     y1_val = idx_i_arg
     x2_val = idx_j_arg + step_j - 1
-    y2_val = idx_i_arg + first_step_i - 1
+    y2_val = idx_i_arg - first_step_i + 1
 
     return x1_val, x2_val, y1_val, y2_val
 
@@ -331,7 +331,11 @@ idx_j = 5   # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
 
+
+coords = np.zeros(shape=[4, 4])     # 4 threads: [right-bottom right_top , left-bt, left-tp], 4 coords: [x1 x2 y1 y2]
+
 x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j)
+coords[0, :] = np.array([x1, x2, y1, y2])
 
 p1 = np.array([x1, y1])
 p2 = np.array([x1, y2])
@@ -340,7 +344,20 @@ p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='b')
 
+
+x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j)
+coords[1, :] = np.array([x1, x2, y1, y2])
+
+p1 = np.array([x1, y1])
+p2 = np.array([x1, y2])
+p3 = np.array([x2, y1])
+p4 = np.array([x2, y2])
+ps = np.array([p1, p2, p4, p3, p1])
+plt.plot(ps[:, 0], ps[:, 1], c='b')
+
+
 x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j)
+coords[2, :] = np.array([x1, x2, y1, y2])
 
 p1 = np.array([x1, y1])
 p2 = np.array([x1, y2])
@@ -350,6 +367,7 @@ ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='b')
 
 x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j)
+coords[3, :] = np.array([x1, x2, y1, y2])
 
 p1 = np.array([x1, y1])
 p2 = np.array([x1, y2])
@@ -357,6 +375,29 @@ p3 = np.array([x2, y1])
 p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='b')
+
+
+# coords[]
+pr = coords[[0, 1], 1].min()
+pl = coords[[2, 3], 1].min()
+
+pb = coords[[0, 2], 3].min()
+pt = coords[[1, 3], 3].min()
+
+
+# final x1x2 and y1y2
+x1 = pl
+x2 = pr
+y1 = pb
+y2 = pt
+
+
+p1 = np.array([x1, y1])
+p2 = np.array([x1, y2])
+p3 = np.array([x2, y1])
+p4 = np.array([x2, y2])
+ps = np.array([p1, p2, p4, p3, p1])
+plt.plot(ps[:, 0], ps[:, 1], c='r')
 
 
 #
