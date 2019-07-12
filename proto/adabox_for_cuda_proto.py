@@ -326,8 +326,18 @@ ax = fig.add_subplot(111)
 plt.imshow(data_matrix)
 ax.set_aspect('equal')
 
-idx_i = 6   # y rand point
-idx_j = 5   # x rand point
+m = data_matrix.shape[0]    # for i
+n = data_matrix.shape[1]    # for j
+
+
+for i_n in range(m):
+    for j_n in range(n):
+        if data_matrix[i_n, j_n] == 1:
+            plt.scatter(j_n, i_n, c='w', marker='.')
+
+
+idx_i = 10   # y rand point
+idx_j = 1   # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
 
@@ -342,7 +352,7 @@ p2 = np.array([x1, y2])
 p3 = np.array([x2, y1])
 p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
-plt.plot(ps[:, 0], ps[:, 1], c='b')
+plt.plot(ps[:, 0], ps[:, 1], c='w')
 
 
 x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j)
@@ -353,7 +363,7 @@ p2 = np.array([x1, y2])
 p3 = np.array([x2, y1])
 p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
-plt.plot(ps[:, 0], ps[:, 1], c='b')
+plt.plot(ps[:, 0], ps[:, 1], c='w')
 
 
 x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j)
@@ -364,7 +374,7 @@ p2 = np.array([x1, y2])
 p3 = np.array([x2, y1])
 p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
-plt.plot(ps[:, 0], ps[:, 1], c='b')
+plt.plot(ps[:, 0], ps[:, 1], c='w')
 
 x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j)
 coords[3, :] = np.array([x1, x2, y1, y2])
@@ -374,7 +384,7 @@ p2 = np.array([x1, y2])
 p3 = np.array([x2, y1])
 p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
-plt.plot(ps[:, 0], ps[:, 1], c='b')
+plt.plot(ps[:, 0], ps[:, 1], c='w')
 
 
 # coords[]
@@ -388,8 +398,11 @@ pt = coords[[1, 3], 3].max()
 # final x1x2 and y1y2
 x1 = pl
 x2 = pr
-y1 = pb
-y2 = pt
+y1 = pt
+y2 = pb
+
+plt.scatter(x1, y1, c='r')
+plt.scatter(x2, y2, c='b')
 
 
 p1 = np.array([x1, y1])
@@ -400,127 +413,5 @@ ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='r')
 
 
-#
-# # left top
-# step_j = 0
-# first_step_i = 0
-#
-# while True:
-#     i = idx_i
-#     j = idx_j - step_j
-#
-#     if j == 0:
-#         break
-#
-#     temp_val = data_matrix[i, j]
-#     if temp_val == 0:
-#         break
-#
-#     step_i = 0
-#     while True:
-#         i = idx_i - step_i
-#
-#         if i == -1:
-#             break
-#
-#         # print(i)
-#         temp_val = data_matrix[i, j]
-#         # print(temp_val)
-#         plt.scatter(j, i, c='g', marker='x')
-#
-#         if temp_val == 0:
-#             break
-#
-#         step_i += 1
-#
-#     if step_j == 0:
-#         first_step_i = step_i
-#     else:
-#         if step_i < first_step_i:
-#             break
-#
-#     plt.scatter(j, idx_i, c='g', marker='x')
-#     plt.scatter(j, idx_i - first_step_i + 1, c='g', marker='x')
-#
-#     step_j += 1
-#
-#
-#
-# # Results and plot
-#
-# x1 = idx_j
-# y1 = idx_i
-# x2 = idx_j - step_j + 1
-# y2 = idx_i - first_step_i + 1
-#
-# p1 = np.array([x1, y1])
-# p2 = np.array([x1, y2])
-# p3 = np.array([x2, y1])
-# p4 = np.array([x2, y2])
-# ps = np.array([p1, p2, p4, p3, p1])
-#
-# plt.plot(ps[:, 0], ps[:, 1], c='b')
 
 
-
-#
-# # right_bottom
-# step_j = 0
-# first_step_i = 0
-#
-# while True:
-#     i = idx_i
-#     j = idx_j + step_j
-#
-#     if j == n:
-#         break
-#
-#     temp_val = data_matrix[i, j]
-#     if temp_val == 0:
-#         break
-#
-#     step_i = 0
-#     while True:
-#         i = idx_i + step_i
-#
-#         if i == m:
-#             break
-#
-#         # print(i)
-#         temp_val = data_matrix[i, j]
-#         # print(temp_val)
-#         # plt.scatter(j, i, c='g', marker='x')
-#
-#         if temp_val == 0:
-#             break
-#
-#         step_i += 1
-#
-#     if step_j == 0:
-#         first_step_i = step_i
-#     else:
-#         if step_i < first_step_i:
-#             break
-#
-#     plt.scatter(j, idx_i, c='g', marker='x')
-#     plt.scatter(j, idx_i + first_step_i - 1, c='g', marker='x')
-#
-#     step_j += 1
-#
-#
-#
-# # Results and plot
-#
-# x1 = idx_j
-# y1 = idx_i
-# x2 = idx_j + step_j - 1
-# y2 = idx_i + first_step_i - 1
-#
-# p1 = np.array([x1, y1])
-# p2 = np.array([x1, y2])
-# p3 = np.array([x2, y1])
-# p4 = np.array([x2, y2])
-# ps = np.array([p1, p2, p4, p3, p1])
-#
-# plt.plot(ps[:, 0], ps[:, 1], c='b')
-#

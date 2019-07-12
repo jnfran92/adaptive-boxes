@@ -235,7 +235,7 @@ counter = 0
 while not stop_flag:
 
     counter += 1
-    if counter > 4:
+    if counter > 1:
         break
 
     ones_counter = (data_matrix == 1).sum()
@@ -258,14 +258,42 @@ while not stop_flag:
     x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, n, m)
     coords[0, :] = np.array([x1, x2, y1, y2])
 
+    p1 = np.array([x1, y1])
+    p2 = np.array([x1, y2])
+    p3 = np.array([x2, y1])
+    p4 = np.array([x2, y2])
+    ps = np.array([p1, p2, p4, p3, p1])
+    plt.plot(ps[:, 0], ps[:, 1], c='b')
+
     x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j, n)
     coords[1, :] = np.array([x1, x2, y1, y2])
+
+    p1 = np.array([x1, y1])
+    p2 = np.array([x1, y2])
+    p3 = np.array([x2, y1])
+    p4 = np.array([x2, y2])
+    ps = np.array([p1, p2, p4, p3, p1])
+    plt.plot(ps[:, 0], ps[:, 1], c='y')
 
     x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j, m)
     coords[2, :] = np.array([x1, x2, y1, y2])
 
+    p1 = np.array([x1, y1])
+    p2 = np.array([x1, y2])
+    p3 = np.array([x2, y1])
+    p4 = np.array([x2, y2])
+    ps = np.array([p1, p2, p4, p3, p1])
+    plt.plot(ps[:, 0], ps[:, 1], c='g')
+
     x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j)
     coords[3, :] = np.array([x1, x2, y1, y2])
+
+    p1 = np.array([x1, y1])
+    p2 = np.array([x1, y2])
+    p3 = np.array([x2, y1])
+    p4 = np.array([x2, y2])
+    ps = np.array([p1, p2, p4, p3, p1])
+    plt.plot(ps[:, 0], ps[:, 1], c='w')
 
 
     # coords[]
