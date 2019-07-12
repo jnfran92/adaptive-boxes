@@ -188,7 +188,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg):
     return x1_val, x2_val, y1_val, y2_val
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/hall10.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/seats12.binary'
 out_path = ''
 
 start = time.time()
@@ -225,10 +225,11 @@ m = data_matrix.shape[0]    # for i
 
 recs = []
 stop_flag = False
-print('start decomposition')
+print('Doing the Decomposition')
 while not stop_flag:
 
     ones_counter = (data_matrix == 1).sum()
+    print(ones_counter)
     if ones_counter == 0:
         print("End!")
         break
@@ -278,7 +279,7 @@ print('Elapsed time: ' + str(end - start))
 plot_rectangles(recs, 1)
 plt.show()
 
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-# plt.imshow(data_matrix)
-# ax.set_aspect('equal')
+fig = plt.figure()
+ax = fig.add_subplot(111)
+plt.imshow(data_matrix)
+ax.set_aspect('equal')

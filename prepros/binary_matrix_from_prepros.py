@@ -33,14 +33,14 @@ data = np.load(in_path)
 data[:, 1] = -1*data[:, 1]
 
 # Cleaning data
-qi = np.quantile(data[:, 1], 0.000005)
-qs = np.quantile(data[:, 1], 0.999995)
-
-qi_index = np.where(data[:, 1] < qi)
-qs_index = np.where(data[:, 1] > qs)
-
-data = np.delete(data, qi_index[0], axis=0)
-data = np.delete(data, qs_index[0], axis=0)
+# qi = np.quantile(data[:, 1], 0.000005)
+# qs = np.quantile(data[:, 1], 0.999995)
+#
+# qi_index = np.where(data[:, 1] < qi)
+# qs_index = np.where(data[:, 1] > qs)
+#
+# data = np.delete(data, qi_index[0], axis=0)
+# data = np.delete(data, qs_index[0], axis=0)
 
 
 # fig = plt.figure()
