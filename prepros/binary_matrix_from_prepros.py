@@ -1,7 +1,7 @@
 import sys
 
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 if len(sys.argv) < 3:
     print("ERROR: args error: Needed: \n[1]prepros in_path(with file.npy) \n[2]binary out_path (with file.binary)")
@@ -29,11 +29,12 @@ print("Args summary: " + '\n In Path:' + in_path + '\n Out Path:' + out_path)
 
 
 data = np.load(in_path)
+data[:, 1] = -1*data[:, 1]
 
-fig = plt.figure()
-plt.scatter(data[:, 0], data[:, 1])
-plt.axis('scaled')
-fig.tight_layout()
+# fig = plt.figure()
+# plt.scatter(data[:, 0], data[:, 1])
+# plt.axis('scaled')
+# fig.tight_layout()
 
 # Size data
 m_data = data.shape[0]

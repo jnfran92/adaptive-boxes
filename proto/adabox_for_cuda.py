@@ -187,7 +187,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg):
 
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/complex.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/squares.binary'
 out_path = ''
 
 data_matrix = np.loadtxt(in_path, delimiter=",")
@@ -235,23 +235,20 @@ counter = 0
 while not stop_flag:
 
     counter += 1
-
-    if counter > 2:
-        stop_flag = True
-
-    (data_matrix == 1).sum()
+    if counter > 4:
+        break
 
     ones_counter = (data_matrix == 1).sum()
     print(ones_counter)
     if ones_counter == 0:
-        stop_flag = True
+        break
 
     search_end_flag = False
     while not search_end_flag:
         idx_i = int(np.random.rand()*m)   # y rand point
         idx_j = int(np.random.rand()*n)   # x rand point
         if data_matrix[idx_i, idx_j] == 1:
-            search_end_flag = True
+            break
 
     # idx_i = 19
     # idx_j = 125
@@ -280,12 +277,13 @@ while not stop_flag:
 
     # final x1x2 and y1y2
     x1 = int(pl)
-    x2 = int(pr)
-    y1 = int(pb)
-    y2 = int(pt)
+    x2 = int(pr) + 1
+    y1 = int(pt)
+    y2 = int(pb) + 1
 
-    plt.scatter(x1, y1, c='r')
-    plt.scatter(x2, y2, c='b')
+
+    # plt.scatter(x1, y1, c='r')
+    # plt.scatter(x2, y2, c='b')
 
     p1 = np.array([x1, y1])
     p2 = np.array([x1, y2])
@@ -295,7 +293,7 @@ while not stop_flag:
     plt.plot(ps[:, 0], ps[:, 1], c='r')
 
     # write data
-    data_matrix[y2:y1, x1:x2] = 0
+    data_matrix[y1:y2, x1:x2] = 0
 
 
 # Plot
