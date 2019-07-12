@@ -413,5 +413,5 @@ ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='r')
 
 
-
+data_matrix[y1:y2+1, x1:x2+1] = 0
 

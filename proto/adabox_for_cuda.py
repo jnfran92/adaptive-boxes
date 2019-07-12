@@ -1,9 +1,9 @@
 
-import sys
-import time
-import numpy as np
 import matplotlib.pyplot as plt
-from multiprocessing import Pool
+import numpy as np
+
+from lib.plot_tools import plot_rectangles
+from lib.tools import Rectangle
 
 
 def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, n_arg, m_arg):
@@ -219,32 +219,14 @@ idx_i = 1   # y rand point
 idx_j = 1   # x rand point
 
 
-
-# Plot
-fig = plt.figure()
-ax = fig.add_subplot(111)
-plt.imshow(data_matrix)
-ax.set_aspect('equal')
-
 n = data_matrix.shape[1]    # for j
 m = data_matrix.shape[0]    # for i
 
-# for i_n in range(m):
-#     for j_n in range(n):
-#         if data_matrix[i_n, j_n] == 1:
-#             plt.scatter(j_n, i_n, c='w', marker='.')
-
-
+recs = []
 stop_flag = False
-counter = 0
 while not stop_flag:
 
-    # counter += 1
-    # if counter > 1:
-    #     break
-
     ones_counter = (data_matrix == 1).sum()
-    # print(ones_counter)
     if ones_counter == 0:
         print("End!")
         break
@@ -255,11 +237,6 @@ while not stop_flag:
         idx_j = int(np.random.rand()*n)   # x rand point
         if data_matrix[idx_i, idx_j] == 1:
             break
-
-    # idx_i = 19
-    # idx_j = 125
-
-    # plt.scatter(idx_j, idx_i, c='r')
 
     x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, n, m)
     coords[0, :] = np.array([x1, x2, y1, y2])
@@ -286,24 +263,16 @@ while not stop_flag:
     y1 = int(pt)
     y2 = int(pb)
 
-
-    # plt.scatter(x1, y1, c='r')
-    # plt.scatter(x2, y2, c='b')
-
-    # p1 = np.array([x1, y1])
-    # p2 = np.array([x1, y2])
-    # p3 = np.array([x2, y1])
-    # p4 = np.array([x2, y2])
-    # ps = np.array([p1, p2, p4, p3, p1])
-    # plt.plot(ps[:, 0], ps[:, 1], c='r')
-
     # write data
+    recs.append(Rectangle(x1, x2, y1, y2))
     data_matrix[y1:y2+1, x1:x2+1] = 0
 
 
-
 # Plot
-fig = plt.figure()
-ax = fig.add_subplot(111)
-plt.imshow(data_matrix)
-ax.set_aspect('equal')
+plot_rectangles(recs, 1)
+plt.show()
+
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# plt.imshow(data_matrix)
+# ax.set_aspect('equal')
