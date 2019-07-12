@@ -1,4 +1,6 @@
 
+import time
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -186,17 +188,16 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg):
     return x1_val, x2_val, y1_val, y2_val
 
 
-
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/complex.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/hall10.binary'
 out_path = ''
 
-data_matrix = np.loadtxt(in_path, delimiter=",")
+start = time.time()
 
+data_matrix = np.loadtxt(in_path, delimiter=",")
 # Flatten Matrix
 data_matrix_f = data_matrix.flatten()
 
 # Kernel Data
-
 dim3_block_x = 1
 dim3_block_y = 1
 
@@ -224,6 +225,7 @@ m = data_matrix.shape[0]    # for i
 
 recs = []
 stop_flag = False
+print('start decomposition')
 while not stop_flag:
 
     ones_counter = (data_matrix == 1).sum()
@@ -266,6 +268,10 @@ while not stop_flag:
     # write data
     recs.append(Rectangle(x1, x2, y1, y2))
     data_matrix[y1:y2+1, x1:x2+1] = 0
+
+end = time.time()
+print('Work Finished!!!')
+print('Elapsed time: ' + str(end - start))
 
 
 # Plot

@@ -1,3 +1,4 @@
+
 import sys
 
 import numpy as np
@@ -22,7 +23,7 @@ def xy_to_ij(x_arg, y_arg):
     return index_i, index_j
 
 
-# in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/squares.npy'
+# in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/seats12.npy'
 # out_path = '/Users/Juan/django_projects/adaptive-boxes/data_raw/squares_binary.png'
 
 print("Args summary: " + '\n In Path:' + in_path + '\n Out Path:' + out_path)
@@ -30,6 +31,17 @@ print("Args summary: " + '\n In Path:' + in_path + '\n Out Path:' + out_path)
 
 data = np.load(in_path)
 data[:, 1] = -1*data[:, 1]
+
+# Cleaning data
+qi = np.quantile(data[:, 1], 0.000005)
+qs = np.quantile(data[:, 1], 0.999995)
+
+qi_index = np.where(data[:, 1] < qi)
+qs_index = np.where(data[:, 1] > qs)
+
+data = np.delete(data, qi_index[0], axis=0)
+data = np.delete(data, qs_index[0], axis=0)
+
 
 # fig = plt.figure()
 # plt.scatter(data[:, 0], data[:, 1])
