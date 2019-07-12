@@ -174,7 +174,7 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg):
         i = idx_i_arg
         j = idx_j_arg - step_j
 
-        if j == 0:
+        if j == -1:
             break
 
         temp_val = data_matrix[i, j]
@@ -205,7 +205,7 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg):
                 break
 
         plt.scatter(j, idx_i_arg, c='g', marker='x')
-        plt.scatter(j, idx_i_arg + first_step_i - 1, c='g', marker='x')
+        plt.scatter(j, idx_i_arg + first_step_i - 1, c='b', marker='x')
 
         step_j += 1
 
@@ -225,7 +225,7 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg):
         i = idx_i_arg
         j = idx_j_arg - step_j
 
-        if j == 0:
+        if j == -1:
             break
 
         temp_val = data_matrix[i, j]
@@ -256,7 +256,7 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg):
                 break
 
         plt.scatter(j, idx_i_arg, c='g', marker='x')
-        plt.scatter(j, idx_i_arg - first_step_i + 1, c='g', marker='x')
+        plt.scatter(j, idx_i_arg - first_step_i + 1, c='b', marker='x')
 
         step_j += 1
 

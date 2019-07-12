@@ -59,7 +59,7 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg):
         i = idx_i_arg
         j = idx_j_arg - step_j
 
-        if j == 0:
+        if j == -1:
             break
 
         temp_val = data_matrix[i, j]
@@ -104,7 +104,7 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg):
         i = idx_i_arg
         j = idx_j_arg - step_j
 
-        if j == 0:
+        if j == -1:
             break
 
         temp_val = data_matrix[i, j]
@@ -187,7 +187,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg):
 
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/squares.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/complex.binary'
 out_path = ''
 
 data_matrix = np.loadtxt(in_path, delimiter=",")
@@ -229,18 +229,24 @@ ax.set_aspect('equal')
 n = data_matrix.shape[1]    # for j
 m = data_matrix.shape[0]    # for i
 
+# for i_n in range(m):
+#     for j_n in range(n):
+#         if data_matrix[i_n, j_n] == 1:
+#             plt.scatter(j_n, i_n, c='w', marker='.')
+
 
 stop_flag = False
 counter = 0
 while not stop_flag:
 
-    counter += 1
-    if counter > 1:
-        break
+    # counter += 1
+    # if counter > 1:
+    #     break
 
     ones_counter = (data_matrix == 1).sum()
-    print(ones_counter)
+    # print(ones_counter)
     if ones_counter == 0:
+        print("End!")
         break
 
     search_end_flag = False
@@ -258,43 +264,14 @@ while not stop_flag:
     x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, n, m)
     coords[0, :] = np.array([x1, x2, y1, y2])
 
-    p1 = np.array([x1, y1])
-    p2 = np.array([x1, y2])
-    p3 = np.array([x2, y1])
-    p4 = np.array([x2, y2])
-    ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1], c='b')
-
     x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j, n)
     coords[1, :] = np.array([x1, x2, y1, y2])
-
-    p1 = np.array([x1, y1])
-    p2 = np.array([x1, y2])
-    p3 = np.array([x2, y1])
-    p4 = np.array([x2, y2])
-    ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1], c='y')
 
     x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j, m)
     coords[2, :] = np.array([x1, x2, y1, y2])
 
-    p1 = np.array([x1, y1])
-    p2 = np.array([x1, y2])
-    p3 = np.array([x2, y1])
-    p4 = np.array([x2, y2])
-    ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1], c='g')
-
     x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j)
     coords[3, :] = np.array([x1, x2, y1, y2])
-
-    p1 = np.array([x1, y1])
-    p2 = np.array([x1, y2])
-    p3 = np.array([x2, y1])
-    p4 = np.array([x2, y2])
-    ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1], c='w')
-
 
     # coords[]
     pr = coords[[0, 1], 1].min()
@@ -305,23 +282,24 @@ while not stop_flag:
 
     # final x1x2 and y1y2
     x1 = int(pl)
-    x2 = int(pr) + 1
+    x2 = int(pr)
     y1 = int(pt)
-    y2 = int(pb) + 1
+    y2 = int(pb)
 
 
     # plt.scatter(x1, y1, c='r')
     # plt.scatter(x2, y2, c='b')
 
-    p1 = np.array([x1, y1])
-    p2 = np.array([x1, y2])
-    p3 = np.array([x2, y1])
-    p4 = np.array([x2, y2])
-    ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1], c='r')
+    # p1 = np.array([x1, y1])
+    # p2 = np.array([x1, y2])
+    # p3 = np.array([x2, y1])
+    # p4 = np.array([x2, y2])
+    # ps = np.array([p1, p2, p4, p3, p1])
+    # plt.plot(ps[:, 0], ps[:, 1], c='r')
 
     # write data
-    data_matrix[y1:y2, x1:x2] = 0
+    data_matrix[y1:y2+1, x1:x2+1] = 0
+
 
 
 # Plot
