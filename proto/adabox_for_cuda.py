@@ -236,7 +236,14 @@ while not stop_flag:
 
     counter += 1
 
-    if counter > 900:
+    if counter > 2:
+        stop_flag = True
+
+    (data_matrix == 1).sum()
+
+    ones_counter = (data_matrix == 1).sum()
+    print(ones_counter)
+    if ones_counter == 0:
         stop_flag = True
 
     search_end_flag = False
@@ -249,7 +256,7 @@ while not stop_flag:
     # idx_i = 19
     # idx_j = 125
 
-    plt.scatter(idx_j, idx_i, c='r')
+    # plt.scatter(idx_j, idx_i, c='r')
 
     x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, n, m)
     coords[0, :] = np.array([x1, x2, y1, y2])
@@ -272,10 +279,13 @@ while not stop_flag:
     pt = coords[[1, 3], 3].max()
 
     # final x1x2 and y1y2
-    x1 = pl
-    x2 = pr
-    y1 = pb
-    y2 = pt
+    x1 = int(pl)
+    x2 = int(pr)
+    y1 = int(pb)
+    y2 = int(pt)
+
+    plt.scatter(x1, y1, c='r')
+    plt.scatter(x2, y2, c='b')
 
     p1 = np.array([x1, y1])
     p2 = np.array([x1, y2])
@@ -283,3 +293,13 @@ while not stop_flag:
     p4 = np.array([x2, y2])
     ps = np.array([p1, p2, p4, p3, p1])
     plt.plot(ps[:, 0], ps[:, 1], c='r')
+
+    # write data
+    data_matrix[y2:y1, x1:x2] = 0
+
+
+# Plot
+fig = plt.figure()
+ax = fig.add_subplot(111)
+plt.imshow(data_matrix)
+ax.set_aspect('equal')
