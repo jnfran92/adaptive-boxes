@@ -1,7 +1,11 @@
 
 import time
+
+import matplotlib.pyplot as plt
 import numpy as np
-from lib.tools import Rectangle, save_to_json
+
+from lib.plot_tools import plot_rectangles
+from lib.tools import Rectangle
 
 
 def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, n_arg, m_arg):
@@ -9,24 +13,24 @@ def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, n_arg, m_arg):
     first_step_i = 0
 
     while True:
-        i = idx_i_arg
-        j = idx_j_arg + step_j
+        i_val = idx_i_arg
+        j_val = idx_j_arg + step_j
 
-        if j == n_arg:
+        if j_val == n_arg:
             break
 
-        temp_val = data_matrix[i, j]
+        temp_val = data_matrix[i_val, j_val]
         if temp_val == 0:
             break
 
         step_i = 0
         while True:
-            i = idx_i_arg + step_i
+            i_val = idx_i_arg + step_i
 
-            if i == m_arg:
+            if i_val == m_arg:
                 break
 
-            temp_val = data_matrix[i, j]
+            temp_val = data_matrix[i_val, j_val]
 
             if temp_val == 0:
                 break
@@ -54,24 +58,24 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg):
     first_step_i = 0
 
     while True:
-        i = idx_i_arg
-        j = idx_j_arg - step_j
+        i_val = idx_i_arg
+        j_val = idx_j_arg - step_j
 
-        if j == -1:
+        if j_val == -1:
             break
 
-        temp_val = data_matrix[i, j]
+        temp_val = data_matrix[i_val, j_val]
         if temp_val == 0:
             break
 
         step_i = 0
         while True:
-            i = idx_i_arg + step_i
+            i_val = idx_i_arg + step_i
 
-            if i == m_arg:
+            if i_val == m_arg:
                 break
 
-            temp_val = data_matrix[i, j]
+            temp_val = data_matrix[i_val, j_val]
 
             if temp_val == 0:
                 break
@@ -99,24 +103,24 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg):
     first_step_i = 0
 
     while True:
-        i = idx_i_arg
-        j = idx_j_arg - step_j
+        i_val = idx_i_arg
+        j_val = idx_j_arg - step_j
 
-        if j == -1:
+        if j_val == -1:
             break
 
-        temp_val = data_matrix[i, j]
+        temp_val = data_matrix[i_val, j_val]
         if temp_val == 0:
             break
 
         step_i = 0
         while True:
-            i = idx_i_arg - step_i
+            i_val = idx_i_arg - step_i
 
-            if i == -1:
+            if i_val == -1:
                 break
 
-            temp_val = data_matrix[i, j]
+            temp_val = data_matrix[i_val, j_val]
 
             if temp_val == 0:
                 break
@@ -144,24 +148,24 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg):
     first_step_i = 0
 
     while True:
-        i = idx_i_arg
-        j = idx_j_arg + step_j
+        i_val = idx_i_arg
+        j_val = idx_j_arg + step_j
 
-        if j == n_arg:
+        if j_val == n_arg:
             break
 
-        temp_val = data_matrix[i, j]
+        temp_val = data_matrix[i_val, j_val]
         if temp_val == 0:
             break
 
         step_i = 0
         while True:
-            i = idx_i_arg - step_i
+            i_val = idx_i_arg - step_i
 
-            if i == -1:
+            if i_val == -1:
                 break
 
-            temp_val = data_matrix[i, j]
+            temp_val = data_matrix[i_val, j_val]
 
             if temp_val == 0:
                 break
@@ -184,39 +188,117 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg):
     return x1_val, x2_val, y1_val, y2_val
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/boston12.binary'
-out_path = '/Users/Juan/django_projects/adaptive-boxes/results/boston12.json'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/squares.binary'
+out_path = ''
 
 start = time.time()
 
 data_matrix = np.loadtxt(in_path, delimiter=",")
-
-
-end = time.time()
-print('Loaded Data!')
-print('Elapsed time: ' + str(end - start))
+# Flatten Matrix
+data_matrix_f = data_matrix.flatten()
 
 # Kernel Data
 dim3_block_x = 1
-dim3_block_y = 1
+dim3_block_y = 4
 
-block_dim_y = 1
-block_dim_x = 1
+dim3_grid_x = 1
+dim3_grid_y = 1
+
+block_dim_y = dim3_block_y
+block_dim_x = dim3_block_x
+
+grid_dim_y = dim3_grid_y
+grid_dim_x = dim3_grid_x
+
 
 # KERNEL
+# Kernel editable
+# Params
+#       4 threads: [right-bottom right_top , left-bt, left-tp], 4 coords: [x1 x2 y1 y2]
+coords = np.zeros(shape=[4*dim3_block_y])    # Could be stored in Cache- Shared Memory
+# idx_i = 1   # y rand point
+# idx_j = 1   # x rand point
+
+n = data_matrix.shape[1]    # for j
+m = data_matrix.shape[0]    # for i
+
+# get random Point
+whs_one = np.where(data_matrix == 1)
+whs_one_len = whs_one[0].shape[0]
+rand_num = int(np.random.rand() * whs_one_len)
+
+idx_i = whs_one[0][rand_num]  # y rand point
+idx_j = whs_one[1][rand_num]  # x rand point
+
+
 # Kernel non-editable - they go in for-loop
 block_idx_x = 0
 block_idx_y = 0
 
 thread_idx_x = 0
 thread_idx_y = 0
+# Run Kernel
+for thread_idx_y in range(block_dim_y):
+    for thread_idx_x in range(block_dim_x):
+        print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+        i = thread_idx_y
+        j = thread_idx_x
 
-# Kernel editable
-# Params
-#       4 threads: [right-bottom right_top , left-bt, left-tp], 4 coords: [x1 x2 y1 y2]
-coords = np.zeros(shape=[4, 4])    # Could be stored in Cache- Shared Memory
-idx_i = 1   # y rand point
-idx_j = 1   # x rand point
+        g_i = block_dim_y * block_idx_y + i
+        g_j = block_dim_x * block_idx_x + j
+
+        x1 = 0
+        x2 = 0
+        y1 = 0
+        y2 = 0
+        if i == 0:
+            x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, n, m)
+        if i == 1:
+            x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j, n)
+        if i == 2:
+            x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j, m)
+        if i == 3:
+            x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j)
+
+        coords[i * block_dim_y + 0] = x1
+        coords[i * block_dim_y + 1] = x2
+        coords[i * block_dim_y + 2] = y1
+        coords[i * block_dim_y + 3] = y2
+
+
+
+
+# coords[]
+pr = coords[[0, 1], 1].min()
+pl = coords[[2, 3], 1].max()
+
+pb = coords[[0, 2], 3].min()
+pt = coords[[1, 3], 3].max()
+
+
+
+# Plot
+fig = plt.figure(figsize=(6, 3.2))
+ax = fig.add_subplot(111)
+plt.imshow(data_matrix)
+ax.set_aspect('equal')
+
+for i in range(dim3_block_y):
+
+    x1 = coords[i * block_dim_y + 0]
+    x2 = coords[i * block_dim_y + 1]
+    y1 = coords[i * block_dim_y + 2]
+    y2 = coords[i * block_dim_y + 3]
+
+    p1 = np.array([x1, y1])
+    p2 = np.array([x1, y2])
+    p3 = np.array([x2, y1])
+    p4 = np.array([x2, y2])
+    ps = np.array([p1, p2, p4, p3, p1])
+    plt.plot(ps[:, 0], ps[:, 1], c='w')
+
+
+
 
 
 n = data_matrix.shape[1]    # for j
@@ -225,24 +307,21 @@ m = data_matrix.shape[0]    # for i
 recs = []
 stop_flag = False
 print('Doing the Decomposition')
-start = time.time()
 while not stop_flag:
 
     ones_counter = (data_matrix == 1).sum()
-    # print(ones_counter)
+    print(ones_counter)
     if ones_counter == 0:
         print("End!")
         break
 
-    # get random Point
-    whs_one = np.where(data_matrix == 1)
-    whs_one_len = whs_one[0].shape[0]
-    rand_num = int(np.random.rand()*whs_one_len)
+    search_end_flag = False
+    while not search_end_flag:
+        idx_i = int(np.random.rand()*m)   # y rand point
+        idx_j = int(np.random.rand()*n)   # x rand point
+        if data_matrix[idx_i, idx_j] == 1:
+            break
 
-    idx_i = whs_one[0][rand_num]  # y rand point
-    idx_j = whs_one[1][rand_num]  # x rand point
-
-    # Decompositions
     x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, n, m)
     coords[0, :] = np.array([x1, x2, y1, y2])
 
@@ -277,22 +356,9 @@ print('Work Finished!!!')
 print('Elapsed time: ' + str(end - start))
 
 
-# Save best data set
-best_set = recs
-array_to_save = np.zeros(shape=[len(best_set), 4])
-
-for x in range(len(best_set)):
-    array_to_save[x, 0] = best_set[x].x1
-    array_to_save[x, 1] = best_set[x].x2
-    array_to_save[x, 2] = best_set[x].y1
-    array_to_save[x, 3] = best_set[x].y2
-
-save_to_json(out_path, array_to_save, 1)
-
-#
-# # Plot
-# plot_rectangles(recs, 1)
-# plt.show()
+# Plot
+plot_rectangles(recs, 1)
+plt.show()
 
 #
 # fig = plt.figure()
