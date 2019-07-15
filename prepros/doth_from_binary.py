@@ -12,6 +12,7 @@ out_path = str(sys.argv[2])     # .h
 # in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/complex.binary'
 # out_path = '/Users/Juan/django_projects/adaptive-boxes/data_cpp/complex.h'
 
+print("Working...")
 data_matrix = np.loadtxt(in_path, delimiter=",")
 
 data_m = data_matrix.shape[0]
@@ -20,8 +21,8 @@ data_n = data_matrix.shape[1]
 np.array_str(data_matrix.flatten())
 
 text_file = open(out_path, "w")
-text_file.write('long m = %d; \nlong n = %d; \n\n' % (data_m, data_n))
-text_file.write('int[] data = { \n')
+text_file.write('const long m = %d; \nconst long n = %d; \n\n' % (data_m, data_n))
+text_file.write('int data[%ld] = { \n' % (data_m*data_n))
 
 
 for i in range(data_m):

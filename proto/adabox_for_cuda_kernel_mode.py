@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_val):
+def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_arg):
     step_j = 0
     first_step_i = 0
 
@@ -16,7 +16,7 @@ def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_v
         if j_val == n_arg:
             break
 
-        temp_val = data_matrix_val[i_val*n_arg + j_val]
+        temp_val = data_matrix_arg[i_val * n_arg + j_val]
         if temp_val == 0:
             break
 
@@ -27,7 +27,7 @@ def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_v
             if i_val == m_arg:
                 break
 
-            temp_val = data_matrix_val[i_val*n_arg + j_val]
+            temp_val = data_matrix_arg[i_val * n_arg + j_val]
 
             if temp_val == 0:
                 break
@@ -50,7 +50,7 @@ def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_v
     return x1_val, x2_val, y1_val, y2_val
 
 
-def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_val):
+def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_arg):
     step_j = 0
     first_step_i = 0
 
@@ -61,7 +61,7 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_va
         if j_val == -1:
             break
 
-        temp_val = data_matrix_val[i_val*n_arg + j_val]
+        temp_val = data_matrix_arg[i_val * n_arg + j_val]
         if temp_val == 0:
             break
 
@@ -72,7 +72,7 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_va
             if i_val == m_arg:
                 break
 
-            temp_val = data_matrix_val[i_val*n_arg + j_val]
+            temp_val = data_matrix_arg[i_val * n_arg + j_val]
 
             if temp_val == 0:
                 break
@@ -95,7 +95,7 @@ def get_left_bottom_rectangle(idx_i_arg, idx_j_arg, m_arg, n_arg, data_matrix_va
     return x1_val, x2_val, y1_val, y2_val
 
 
-def get_left_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
+def get_left_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_arg):
     step_j = 0
     first_step_i = 0
 
@@ -106,7 +106,7 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
         if j_val == -1:
             break
 
-        temp_val = data_matrix_val[i_val*n_arg + j_val]
+        temp_val = data_matrix_arg[i_val * n_arg + j_val]
         if temp_val == 0:
             break
 
@@ -117,7 +117,7 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
             if i_val == -1:
                 break
 
-            temp_val = data_matrix_val[i_val*n_arg + j_val]
+            temp_val = data_matrix_arg[i_val * n_arg + j_val]
 
             if temp_val == 0:
                 break
@@ -140,7 +140,7 @@ def get_left_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
     return x1_val, x2_val, y1_val, y2_val
 
 
-def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
+def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_arg):
     step_j = 0
     first_step_i = 0
 
@@ -151,7 +151,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
         if j_val == n_arg:
             break
 
-        temp_val = data_matrix_val[i_val*n_arg + j_val]
+        temp_val = data_matrix_arg[i_val * n_arg + j_val]
         if temp_val == 0:
             break
 
@@ -162,7 +162,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
             if i_val == -1:
                 break
 
-            temp_val = data_matrix_val[i_val*n_arg + j_val]
+            temp_val = data_matrix_arg[i_val * n_arg + j_val]
 
             if temp_val == 0:
                 break
@@ -185,7 +185,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_val):
     return x1_val, x2_val, y1_val, y2_val
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/complex.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/squares.binary'
 out_path = ''
 
 start = time.time()
