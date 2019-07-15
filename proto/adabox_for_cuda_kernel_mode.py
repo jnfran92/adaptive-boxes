@@ -283,7 +283,7 @@ for block_idx_y in range(grid_dim_y):
         print(' ---> running blockId.x: ' + str(block_idx_x) + ' threadId.y: ' + str(block_idx_y))
         for thread_idx_y in range(block_dim_y):
             for thread_idx_x in range(block_dim_x):
-                print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+                print('     ---> running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
                 i = thread_idx_y
                 j = thread_idx_x
 
@@ -332,28 +332,55 @@ for block_idx_y in range(grid_dim_y):
                     coords[block_idx_y][block_idx_x][coords_n * 4 + i] = pb
 
 
-# get area
-for thread_idx_y in range(block_dim_y):
-    for thread_idx_x in range(block_dim_x):
-        print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
-        i = thread_idx_y
-        j = thread_idx_x
+# get area, area value of each block in coord[0][0]
+for block_idx_y in range(grid_dim_y):
+    for block_idx_x in range(grid_dim_x):
+        print(' ---> running blockId.x: ' + str(block_idx_x) + ' threadId.y: ' + str(block_idx_y))
+        for thread_idx_y in range(block_dim_y):
+            for thread_idx_x in range(block_dim_x):
+                print('     ---> running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+                i = thread_idx_y
+                j = thread_idx_x
 
-        g_i = block_dim_y * block_idx_y + i
-        g_j = block_dim_x * block_idx_x + j
+                g_i = block_dim_y * block_idx_y + i
+                g_j = block_dim_x * block_idx_x + j
 
-        x1 = 0
-        x2 = 0
-        y1 = 0
-        y2 = 0
+                x1 = 0
+                x2 = 0
+                y1 = 0
+                y2 = 0
 
-        if i == 0:
-            # a*b
-            a = abs(coords[coords_n * 4 + 0] - coords[coords_n * 4 + 1])
-            b = abs(coords[coords_n * 4 + 2] - coords[coords_n * 4 + 3])
-            area = a*b
-            print('area  ' + str(area))
+                if i == 0:
+                    # a*b
+                    a = abs(coords[block_idx_y][block_idx_x][coords_n * 4 + 0] - coords[block_idx_y][block_idx_x][coords_n * 4 + 1])
+                    b = abs(coords[block_idx_y][block_idx_x][coords_n * 4 + 2] - coords[block_idx_y][block_idx_x][coords_n * 4 + 3])
+                    area = int(a*b)
+                    coords[block_idx_y][block_idx_x][coords_n * 0 + 0] = area   # write area in coord[0][0]
+                    print('area  ' + str(area))
 
+
+# get the max area - should exist communication between blocks
+for block_idx_y in range(grid_dim_y):
+    for block_idx_x in range(grid_dim_x):
+        print(' ---> running blockId.x: ' + str(block_idx_x) + ' threadId.y: ' + str(block_idx_y))
+        for thread_idx_y in range(block_dim_y):
+            for thread_idx_x in range(block_dim_x):
+                print('     ---> running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+                i = thread_idx_y
+                j = thread_idx_x
+
+                g_i = block_dim_y * block_idx_y + i
+                g_j = block_dim_x * block_idx_x + j
+
+                x1 = 0
+                x2 = 0
+                y1 = 0
+                y2 = 0
+
+                if i == 0:
+                    # a*b
+                    area = coords[block_idx_y][block_idx_x][coords_n * 0 + 0]
+                    print('area  ' + str(area))
 
 
 
