@@ -195,11 +195,11 @@ data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix_f = data_matrix.flatten()
 
 # Kernel Data
-dim3_block_x = 1
-dim3_block_y = 4
+dim3_grid_x = 5
+dim3_grid_y = 5
 
-dim3_grid_x = 1
-dim3_grid_y = 1
+dim3_block_x = 1    # fixed
+dim3_block_y = 4    # fixed
 
 block_dim_y = dim3_block_y
 block_dim_x = dim3_block_x
@@ -214,7 +214,7 @@ grid_dim_x = dim3_grid_x
 #       4 threads: [right-bottom right_top , left-bt, left-tp], 4 coords: [x1 x2 y1 y2]
 coords_m = 5
 coords_n = 4
-coords = np.zeros(shape=[dim3_grid_y * dim3_grid_x * (coords_m * coords_n)])    # Could be stored in Shared Memory
+coords = np.zeros(shape=[dim3_grid_y, dim3_grid_x, (coords_m * coords_n)])    # Could be stored in Shared Memory
 # idx_i = 1   # y rand point
 # idx_j = 1   # x rand point
 
@@ -242,9 +242,48 @@ thread_idx_y = 0
 for block_idx_y in range(grid_dim_y):
     for block_idx_x in range(grid_dim_x):
         print(' ---> running blockId.x: ' + str(block_idx_x) + ' threadId.y: ' + str(block_idx_y))
+
+        idx_i = int(np.random.rand() * m)  # y-i rand point
+        idx_j = int(np.random.rand() * n)  # x-j rand point
+
         for thread_idx_y in range(block_dim_y):
             for thread_idx_x in range(block_dim_x):
                 print('     ---> running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
+                i = thread_idx_y
+                j = thread_idx_x
+
+                g_i = block_dim_y * block_idx_y + i
+                g_j = block_dim_x * block_idx_x + j
+
+                if data_matrix_f[idx_i*n + idx_j] == 1:
+                    x1 = 0
+                    x2 = 0
+                    y1 = 0
+                    y2 = 0
+                    if i == 0:
+                        x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, m, n, data_matrix_f)
+                    if i == 1:
+                        x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j, n, data_matrix_f)
+                    if i == 2:
+                        x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j, m, n, data_matrix_f)
+                    if i == 3:
+                        x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j, n, data_matrix_f)
+
+                    coords[block_idx_y][block_idx_x][i * coords_n + 0] = x1
+                    coords[block_idx_y][block_idx_x][i * coords_n + 1] = x2
+                    coords[block_idx_y][block_idx_x][i * coords_n + 2] = y1
+                    coords[block_idx_y][block_idx_x][i * coords_n + 3] = y2
+                else:
+                    print('             disabled thread - rand value is zero')
+
+
+# max and min in coords[], last row is the final x1 x2 y1 y2
+for block_idx_y in range(grid_dim_y):
+    for block_idx_x in range(grid_dim_x):
+        print(' ---> running blockId.x: ' + str(block_idx_x) + ' threadId.y: ' + str(block_idx_y))
+        for thread_idx_y in range(block_dim_y):
+            for thread_idx_x in range(block_dim_x):
+                print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
                 i = thread_idx_y
                 j = thread_idx_x
 
@@ -255,71 +294,42 @@ for block_idx_y in range(grid_dim_y):
                 x2 = 0
                 y1 = 0
                 y2 = 0
+
                 if i == 0:
-                    x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j, m, n, data_matrix_f)
+                    # pl = coords[[2, 3], 1].max()
+                    a = coords[block_idx_y][block_idx_x][coords_n * 2 + 1]
+                    b = coords[block_idx_y][block_idx_x][coords_n * 3 + 1]
+                    pl = a
+                    if b > a:
+                        pl = b
+                    coords[block_idx_y][block_idx_x][coords_n*4 + i] = pl
+
                 if i == 1:
-                    x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j, n, data_matrix_f)
+                    # pr = coords[[0, 1], 1].min()
+                    a = coords[block_idx_y][block_idx_x][coords_n * 0 + 1]
+                    b = coords[block_idx_y][block_idx_x][coords_n * 1 + 1]
+                    pr = a
+                    if b < a:
+                        pr = b
+                    coords[block_idx_y][block_idx_x][coords_n * 4 + i] = pr
+
                 if i == 2:
-                    x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j, m, n, data_matrix_f)
+                    # pt = coords[[1, 3], 3].max()
+                    a = coords[block_idx_y][block_idx_x][block_dim_y * 1 + 3]
+                    b = coords[block_idx_y][block_idx_x][block_dim_y * 3 + 3]
+                    pt = a
+                    if b > a:
+                        pt = b
+                    coords[block_idx_y][block_idx_x][coords_n * 4 + i] = pt
+
                 if i == 3:
-                    x1, x2, y1, y2 = get_left_top_rectangle(idx_i, idx_j, n, data_matrix_f)
-
-                coords[i * coords_n + 0] = x1
-                coords[i * coords_n + 1] = x2
-                coords[i * coords_n + 2] = y1
-                coords[i * coords_n + 3] = y2
-
-
-# max and min in coords[], last row is the final x1 x2 y1 y2
-for thread_idx_y in range(block_dim_y):
-    for thread_idx_x in range(block_dim_x):
-        print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
-        i = thread_idx_y
-        j = thread_idx_x
-
-        g_i = block_dim_y * block_idx_y + i
-        g_j = block_dim_x * block_idx_x + j
-
-        x1 = 0
-        x2 = 0
-        y1 = 0
-        y2 = 0
-
-        if i == 0:
-            # pl = coords[[2, 3], 1].max()
-            a = coords[coords_n * 2 + 1]
-            b = coords[coords_n * 3 + 1]
-            pl = a
-            if b > a:
-                pl = b
-            coords[coords_n*4 + i] = pl
-
-        if i == 1:
-            # pr = coords[[0, 1], 1].min()
-            a = coords[coords_n * 0 + 1]
-            b = coords[coords_n * 1 + 1]
-            pr = a
-            if b < a:
-                pr = b
-            coords[coords_n * 4 + i] = pr
-
-        if i == 2:
-            # pt = coords[[1, 3], 3].max()
-            a = coords[block_dim_y * 1 + 3]
-            b = coords[block_dim_y * 3 + 3]
-            pt = a
-            if b > a:
-                pt = b
-            coords[coords_n * 4 + i] = pt
-
-        if i == 3:
-            # pb = coords[[0, 2], 3].min()
-            a = coords[coords_n * 0 + 3]
-            b = coords[coords_n * 2 + 3]
-            pb = a
-            if b < a:
-                pb = b
-            coords[coords_n * 4 + i] = pb
+                    # pb = coords[[0, 2], 3].min()
+                    a = coords[block_idx_y][block_idx_x][coords_n * 0 + 3]
+                    b = coords[block_idx_y][block_idx_x][coords_n * 2 + 3]
+                    pb = a
+                    if b < a:
+                        pb = b
+                    coords[block_idx_y][block_idx_x][coords_n * 4 + i] = pb
 
 
 # get area
@@ -338,13 +348,11 @@ for thread_idx_y in range(block_dim_y):
         y2 = 0
 
         if i == 0:
-            # pl = coords[[2, 3], 1].max()
-            a = coords[coords_n * 2 + 1]
-            b = coords[coords_n * 3 + 1]
-            pl = a
-            if b > a:
-                pl = b
-            coords[coords_n*4 + i] = pl
+            # a*b
+            a = abs(coords[coords_n * 4 + 0] - coords[coords_n * 4 + 1])
+            b = abs(coords[coords_n * 4 + 2] - coords[coords_n * 4 + 3])
+            area = a*b
+            print('area  ' + str(area))
 
 
 
