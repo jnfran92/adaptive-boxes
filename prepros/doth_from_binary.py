@@ -5,8 +5,8 @@ if len(sys.argv) < 3:
     print('ERROR args. Needed \n[1]in_path(.binary) \n[2]out_path(.h)')
     sys.exit()
 
-in_path = str(sys.argv[1])      # .json
-out_path = str(sys.argv[2])     # .jpg
+in_path = str(sys.argv[1])      # .binary
+out_path = str(sys.argv[2])     # .h
 
 
 # in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/complex.binary'
@@ -33,4 +33,4 @@ for i in range(data_m):
 text_file.write('};\n\n')
 text_file.close()
 
-print("End Work!!")
+print("Work Finished!!")
