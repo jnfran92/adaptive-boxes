@@ -195,8 +195,8 @@ data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix_f = data_matrix.flatten()
 
 # Kernel Data
-dim3_grid_x = 5
-dim3_grid_y = 5
+dim3_grid_x = 1
+dim3_grid_y = 1
 
 dim3_block_x = 1    # fixed
 dim3_block_y = 4    # fixed
@@ -242,9 +242,12 @@ thread_idx_y = 0
 for block_idx_y in range(grid_dim_y):
     for block_idx_x in range(grid_dim_x):
         print(' ---> running blockId.x: ' + str(block_idx_x) + ' threadId.y: ' + str(block_idx_y))
+        #
+        # idx_i = int(np.random.rand() * m)  # y-i rand point
+        # idx_j = int(np.random.rand() * n)  # x-j rand point
 
-        idx_i = int(np.random.rand() * m)  # y-i rand point
-        idx_j = int(np.random.rand() * n)  # x-j rand point
+        idx_i = 10
+        idx_j = 15
 
         for thread_idx_y in range(block_dim_y):
             for thread_idx_x in range(block_dim_x):
