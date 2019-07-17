@@ -246,8 +246,8 @@ for block_idx_y in range(grid_dim_y):
         # idx_i = int(np.random.rand() * m)  # y-i rand point
         # idx_j = int(np.random.rand() * n)  # x-j rand point
 
-        idx_i = 10
-        idx_j = 15
+        idx_i = 100
+        idx_j = 100
 
         for thread_idx_y in range(block_dim_y):
             for thread_idx_x in range(block_dim_x):
@@ -397,10 +397,10 @@ for block_idx_y in range(grid_dim_y):
 
 
 
-# pr = coords[[0, 1], 1].min()
-# pl = coords[[2, 3], 1].max()
-# pb = coords[[0, 2], 3].min()
-# pt = coords[[1, 3], 3].max()
+pr = coords[[0, 1], 1].min()
+pl = coords[[2, 3], 1].max()
+pb = coords[[0, 2], 3].min()
+pt = coords[[1, 3], 3].max()
 
 # final x1x2 and y1y2
 
@@ -411,10 +411,10 @@ ax = fig.add_subplot(111)
 plt.imshow(data_matrix)
 ax.set_aspect('equal')
 
-x1 = int(coords[coords_n * 4 + 0])
-x2 = int(coords[coords_n * 4 + 1])
-y1 = int(coords[coords_n * 4 + 2])
-y2 = int(coords[coords_n * 4 + 3])
+x1 = int(coords[0][0][coords_n * 4 + 0])
+x2 = int(coords[0][0][coords_n * 4 + 1])
+y1 = int(coords[0][0][coords_n * 4 + 2])
+y2 = int(coords[0][0][coords_n * 4 + 3])
 
 p1 = np.array([x1, y1])
 p2 = np.array([x1, y2])
@@ -512,3 +512,23 @@ for i in range(dim3_block_y):
 # # ax = fig.add_subplot(111)
 # # plt.imshow(data_matrix)
 # # ax.set_aspect('equal')
+
+
+
+# Plot
+fig = plt.figure(figsize=(6, 3.2))
+ax = fig.add_subplot(111)
+plt.imshow(data_matrix)
+ax.set_aspect('equal')
+
+x1 = 4
+x2 = 9
+y1 = 0
+y2 = 11
+
+p1 = np.array([x1, y1])
+p2 = np.array([x1, y2])
+p3 = np.array([x2, y1])
+p4 = np.array([x2, y2])
+ps = np.array([p1, p2, p4, p3, p1])
+plt.plot(ps[:, 0], ps[:, 1], c='r')

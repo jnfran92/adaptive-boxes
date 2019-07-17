@@ -21,7 +21,7 @@ data_n = data_matrix.shape[1]
 np.array_str(data_matrix.flatten())
 
 text_file = open(out_path, "w")
-text_file.write('const long m = %d; \nconst long n = %d; \n\n' % (data_m, data_n))
+text_file.write('long m = %d; \nlong n = %d; \n\n' % (data_m, data_n))
 text_file.write('int data[%ld] = { \n' % (data_m*data_n))
 
 
