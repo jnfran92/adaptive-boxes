@@ -185,7 +185,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_arg):
     return x1_val, x2_val, y1_val, y2_val
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/squares.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/complex.binary'
 out_path = ''
 
 start = time.time()
@@ -246,8 +246,8 @@ for block_idx_y in range(grid_dim_y):
         # idx_i = int(np.random.rand() * m)  # y-i rand point
         # idx_j = int(np.random.rand() * n)  # x-j rand point
 
-        idx_i = 100
-        idx_j = 100
+        idx_i = 11
+        idx_j = 10
 
         for thread_idx_y in range(block_dim_y):
             for thread_idx_x in range(block_dim_x):
@@ -521,10 +521,10 @@ ax = fig.add_subplot(111)
 plt.imshow(data_matrix)
 ax.set_aspect('equal')
 
-x1 = 4
-x2 = 9
-y1 = 0
-y2 = 11
+x1 = 40
+x2 = 41
+y1 = 58
+y2 = 254
 
 p1 = np.array([x1, y1])
 p2 = np.array([x1, y2])
