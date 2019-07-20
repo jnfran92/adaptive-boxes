@@ -185,7 +185,7 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg, n_arg, data_matrix_arg):
     return x1_val, x2_val, y1_val, y2_val
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/complex.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/boston12.binary'
 out_path = ''
 
 start = time.time()
