@@ -2,7 +2,7 @@
 import sys
 
 from lib.plot_tools import plot_rectangles
-from lib.tools import load_from_json, Rectangle
+from lib.tools import load_from_json, Rectangle, save_to_json
 import numpy as np
 import matplotlib.pyplot as plt
 plt.ioff()
@@ -59,5 +59,7 @@ for jd in data:
 
 
 plot_rectangles(recs, sep_value)
-plt.savefig(out_path, dpi=3000)
+plt.savefig(out_path + '.jpg', dpi=3000)
+
+save_to_json(out_path + '.json', data, sep_value)
 
