@@ -1,4 +1,3 @@
-
 import sys
 import time
 import numpy as np
@@ -14,19 +13,16 @@ from multiprocessing import Pool
 # out_path = str(sys.argv[2])
 
 
-in_path = '/Users/Juan/django_projects/adaptive-boxes/data_prepros/squares.binary'
+in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/squares.binary'
 out_path = ''
 
 data_matrix = np.loadtxt(in_path, delimiter=",")
-
 
 # Plot
 fig = plt.figure(figsize=(6, 3.2))
 ax = fig.add_subplot(111)
 plt.imshow(data_matrix)
 ax.set_aspect('equal')
-
-
 
 # Flatten Matrix
 data_matrix_f = data_matrix.flatten()
@@ -49,11 +45,129 @@ thread_idx_y = 0
 
 # Kernel editable
 # Params
-distances = np.zeros(shape=[data_matrix_f.shape[0]])    # Could be stored in Cache- Shared Memory
-idx_i = 1   # y rand point
-idx_j = 1   # x rand point
+distances = np.zeros(shape=[data_matrix_f.shape[0]])  # Could be stored in Cache- Shared Memory
+idx_i = 11  # y rand point
+idx_j = 1  # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
+
+m = data_matrix.shape[0]
+n = data_matrix.shape[1]
+
+# br ----
+for i in range(idx_i, m):
+    temp_value = data_matrix_f[i * n + idx_j]
+
+    if temp_value == 0:
+        i = i - 1
+        break
+    else:
+        plt.scatter(idx_j, i, c='g', marker='x')
+
+d0 = i
+
+for j in range(idx_j + 1, n):
+    for i in range(idx_i, d0 + 1):
+        # print(str(j) + ' ' + str(i))
+        temp_value = data_matrix_f[i * n + j]
+
+        if temp_value == 0:
+            i = i - 1
+            break
+        else:
+            plt.scatter(j, i, c='b', marker='x')
+
+    if i < d0:
+        j = j - 1
+        break
+
+# bl ----
+for i in range(idx_i, m):
+    temp_value = data_matrix_f[i * n + idx_j]
+
+    if temp_value == 0:
+        i = i - 1
+        break
+    else:
+        plt.scatter(idx_j, i, c='g', marker='x')
+
+d0 = i
+
+for j in range(idx_j - 1, -1, -1):
+    for i in range(idx_i, d0 + 1):
+        # print(str(j) + ' ' + str(i))
+        temp_value = data_matrix_f[i * n + j]
+
+        if temp_value == 0:
+            i = i - 1
+            break
+        else:
+            plt.scatter(j, i, c='b', marker='x')
+
+    if i < d0:
+        j = j + 1
+        break
+
+
+# tr ----
+for i in range(idx_i - 1, -1, -1):
+    temp_value = data_matrix_f[i * n + idx_j]
+
+    if temp_value == 0:
+        i = i + 1
+        break
+    else:
+        plt.scatter(idx_j, i, c='g', marker='x')
+
+d0 = i
+
+for j in range(idx_j + 1, n):
+    for i in range(idx_i - 1, d0 -1, - 1):
+        # print(str(j) + ' ' + str(i))
+        temp_value = data_matrix_f[i * n + j]
+
+        if temp_value == 0:
+            i = i + 1
+            break
+        else:
+            plt.scatter(j, i, c='b', marker='x')
+
+    if i > d0:
+        j = j - 1
+        break
+
+
+# tl ----
+for i in range(idx_i - 1, -1 , -1):
+    temp_value = data_matrix_f[i * n + idx_j]
+
+    if temp_value == 0:
+        i = i + 1
+        break
+    else:
+        plt.scatter(idx_j, i, c='g', marker='x')
+
+d0 = i
+
+for j in range(idx_j - 1, -1, -1):
+    for i in range(idx_i - 1, d0 - 1, -1):
+        # print(str(j) + ' ' + str(i))
+        temp_value = data_matrix_f[i * n + j]
+
+        if temp_value == 0:
+            i = i + 1
+            break
+        else:
+            plt.scatter(j, i, c='b', marker='x')
+
+    if i > d0:
+        j = j + 1
+        break
+
+
+# plt.scatter(j, idx_i_arg, c='g', marker='x')
+# plt.scatter(j, idx_i_arg + first_step_i - 1, c='g', marker='x')
+
 
 # Run Kernel
 for thread_idx_y in range(block_dim_y):
@@ -96,9 +210,6 @@ idx_d = 1
 distances_matrix[idx_d, :].max()
 distances_matrix[idx_d, :].min()
 
-
-
-
 for thread_idx_y in range(block_dim_y):
     for thread_idx_x in range(block_dim_x):
         # print('running threadId.x: ' + str(thread_idx_x) + ' threadId.y: ' + str(thread_idx_y))
@@ -111,8 +222,8 @@ for thread_idx_y in range(block_dim_y):
         m = block_dim_y
         n = block_dim_x
 
-        if(j == 0):
-            distances[i*n + 0: i*n + m]
+        if (j == 0):
+            distances[i * n + 0: i * n + m]
 
 
 def get_right_bottom_rectangle(idx_i_arg, idx_j_arg):
@@ -155,8 +266,6 @@ def get_right_bottom_rectangle(idx_i_arg, idx_j_arg):
 
         plt.scatter(j, idx_i_arg, c='g', marker='x')
         plt.scatter(j, idx_i_arg + first_step_i - 1, c='g', marker='x')
-
-        step_j += 1
 
     x1_val = idx_j_arg
     y1_val = idx_i_arg
@@ -319,30 +428,26 @@ def get_right_top_rectangle(idx_i_arg, idx_j_arg):
     return x1_val, x2_val, y1_val, y2_val
 
 
-
 # Plot
 fig = plt.figure(figsize=(6, 3.2))
 ax = fig.add_subplot(111)
 plt.imshow(data_matrix)
 ax.set_aspect('equal')
 
-m = data_matrix.shape[0]    # for i
-n = data_matrix.shape[1]    # for j
-
+m = data_matrix.shape[0]  # for i
+n = data_matrix.shape[1]  # for j
 
 for i_n in range(m):
     for j_n in range(n):
         if data_matrix[i_n, j_n] == 1:
             plt.scatter(j_n, i_n, c='w', marker='.')
 
-
-idx_i = 10   # y rand point
-idx_j = 1   # x rand point
+idx_i = 10  # y rand point
+idx_j = 1  # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
 
-
-coords = np.zeros(shape=[4, 4])     # 4 threads: [right-bottom right_top , left-bt, left-tp], 4 coords: [x1 x2 y1 y2]
+coords = np.zeros(shape=[4, 4])  # 4 threads: [right-bottom right_top , left-bt, left-tp], 4 coords: [x1 x2 y1 y2]
 
 x1, x2, y1, y2 = get_right_bottom_rectangle(idx_i, idx_j)
 coords[0, :] = np.array([x1, x2, y1, y2])
@@ -354,7 +459,6 @@ p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='w')
 
-
 x1, x2, y1, y2 = get_right_top_rectangle(idx_i, idx_j)
 coords[1, :] = np.array([x1, x2, y1, y2])
 
@@ -364,7 +468,6 @@ p3 = np.array([x2, y1])
 p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='w')
-
 
 x1, x2, y1, y2 = get_left_bottom_rectangle(idx_i, idx_j)
 coords[2, :] = np.array([x1, x2, y1, y2])
@@ -386,14 +489,12 @@ p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='w')
 
-
 # coords[]
 pr = coords[[0, 1], 1].min()
 pl = coords[[2, 3], 1].max()
 
 pb = coords[[0, 2], 3].min()
 pt = coords[[1, 3], 3].max()
-
 
 # final x1x2 and y1y2
 x1 = pl
@@ -404,7 +505,6 @@ y2 = pb
 plt.scatter(x1, y1, c='r')
 plt.scatter(x2, y2, c='b')
 
-
 p1 = np.array([x1, y1])
 p2 = np.array([x1, y2])
 p3 = np.array([x2, y1])
@@ -412,6 +512,4 @@ p4 = np.array([x2, y2])
 ps = np.array([p1, p2, p4, p3, p1])
 plt.plot(ps[:, 0], ps[:, 1], c='r')
 
-
-data_matrix[y1:y2+1, x1:x2+1] = 0
-
+data_matrix[y1:y2 + 1, x1:x2 + 1] = 0
