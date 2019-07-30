@@ -5,7 +5,7 @@ import numpy as np
 # import matplotlib.pyplot as plt
 
 if len(sys.argv) < 3:
-    print("ERROR: args error: Needed: \n[1]prepros in_path(with file.npy) \n[2]binary out_path (with file.binary)")
+    print("ERROR: args error: Needed: \n[1]prepros in_path(with file.npy) \n[2]out_path (with file.csv)")
     sys.exit()
 
 in_path = str(sys.argv[1])
@@ -70,4 +70,18 @@ for idx in range(len(data)):
 
     data_matrix[i_val, j_val] = int(1)
 
-np.savetxt(out_path, data_matrix, delimiter=",", fmt='%d')
+
+data_m = divs_i
+data_n = divs_j
+
+text_file = open(out_path, "w")
+text_file.write('%d \n%d\n' % (data_m, data_n))
+
+for i in range(data_m):
+    for j in range(data_n):
+        text_file.write('%d, ' % data_matrix[i][j])
+    text_file.write('\n')
+
+text_file.close()
+
+print("Work Finished!!")

@@ -17,6 +17,8 @@ in_path = '/Users/Juan/django_projects/adaptive-boxes/data_binary/squares.binary
 out_path = ''
 
 data_matrix = np.loadtxt(in_path, delimiter=",")
+data_matrix[:,0] = 1
+
 
 # Plot
 fig = plt.figure(figsize=(6, 3.2))
@@ -46,8 +48,8 @@ thread_idx_y = 0
 # Kernel editable
 # Params
 distances = np.zeros(shape=[data_matrix_f.shape[0]])  # Could be stored in Cache- Shared Memory
-idx_i = 11  # y rand point
-idx_j = 1  # x rand point
+idx_i = 7  # y rand point
+idx_j = 13  # x rand point
 
 plt.scatter(idx_j, idx_i, c='r')
 
@@ -109,8 +111,36 @@ for j in range(idx_j - 1, -1, -1):
         break
 
 
+# tl ----
+for i in range(idx_i, -1, -1):
+    temp_value = data_matrix_f[i * n + idx_j]
+
+    if temp_value == 0:
+        i = i + 1
+        break
+    else:
+        plt.scatter(idx_j, i, c='g', marker='x')
+
+d0 = i
+
+for j in range(idx_j - 1, -1, -1):
+    for i in range(idx_i, d0 - 1, -1):
+        # print(str(j) + ' ' + str(i))
+        temp_value = data_matrix_f[i * n + j]
+
+        if temp_value == 0:
+            i = i + 1
+            break
+        else:
+            plt.scatter(j, i, c='b', marker='x')
+
+    if i > d0:
+        j = j + 1
+        break
+
+
 # tr ----
-for i in range(idx_i - 1, -1, -1):
+for i in range(idx_i, -1, -1):
     temp_value = data_matrix_f[i * n + idx_j]
 
     if temp_value == 0:
@@ -122,7 +152,7 @@ for i in range(idx_i - 1, -1, -1):
 d0 = i
 
 for j in range(idx_j + 1, n):
-    for i in range(idx_i - 1, d0 -1, - 1):
+    for i in range(idx_i, d0 -1, - 1):
         # print(str(j) + ' ' + str(i))
         temp_value = data_matrix_f[i * n + j]
 
@@ -136,33 +166,6 @@ for j in range(idx_j + 1, n):
         j = j - 1
         break
 
-
-# tl ----
-for i in range(idx_i - 1, -1 , -1):
-    temp_value = data_matrix_f[i * n + idx_j]
-
-    if temp_value == 0:
-        i = i + 1
-        break
-    else:
-        plt.scatter(idx_j, i, c='g', marker='x')
-
-d0 = i
-
-for j in range(idx_j - 1, -1, -1):
-    for i in range(idx_i - 1, d0 - 1, -1):
-        # print(str(j) + ' ' + str(i))
-        temp_value = data_matrix_f[i * n + j]
-
-        if temp_value == 0:
-            i = i + 1
-            break
-        else:
-            plt.scatter(j, i, c='b', marker='x')
-
-    if i > d0:
-        j = j + 1
-        break
 
 
 # plt.scatter(j, idx_i_arg, c='g', marker='x')
