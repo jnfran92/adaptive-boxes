@@ -1,7 +1,7 @@
-
 import sys
 
 import numpy as np
+
 # import matplotlib.pyplot as plt
 
 if len(sys.argv) < 3:
@@ -28,9 +28,8 @@ def xy_to_ij(x_arg, y_arg):
 
 print("Args summary: " + '\n In Path:' + in_path + '\n Out Path:' + out_path)
 
-
 data = np.load(in_path)
-data[:, 1] = -1*data[:, 1]
+data[:, 1] = -1 * data[:, 1]
 
 # Size data
 m_data = data.shape[0]
@@ -41,8 +40,8 @@ sep_value = 0
 
 diffs = np.zeros(shape=[m_data, 1])
 
-for i in range(len(data)-1):
-    diffs[i] = abs(data[i+1, 0] - data[i, 0])
+for i in range(len(data) - 1):
+    diffs[i] = abs(data[i + 1, 0] - data[i, 0])
 
 diffs_no_zero = diffs[diffs != 0]
 sep_value = np.min(diffs_no_zero)
@@ -54,12 +53,11 @@ x_min = data[:, 0].min()
 y_max = data[:, 1].max()
 y_min = data[:, 1].min()
 
-
 lx = x_max - x_min
 ly = y_max - y_min
 
-divs_i = int(np.round(ly/sep_value)) + 1
-divs_j = int(np.round(lx/sep_value)) + 1
+divs_i = int(np.round(ly / sep_value)) + 1
+divs_j = int(np.round(lx / sep_value)) + 1
 
 data_matrix = np.zeros(shape=[divs_i, divs_j])
 
@@ -70,17 +68,18 @@ for idx in range(len(data)):
 
     data_matrix[i_val, j_val] = int(1)
 
-
 data_m = divs_i
 data_n = divs_j
 
 text_file = open(out_path, "w")
-text_file.write('%d \n%d\n' % (data_m, data_n))
+text_file.write('%d\n%d' % (data_m, data_n))
 
 for i in range(data_m):
-    for j in range(data_n):
-        text_file.write('%d, ' % data_matrix[i][j])
     text_file.write('\n')
+    for j in range(data_n):
+        text_file.write('%d' % data_matrix[i][j])
+        if j != (data_n - 1):
+            text_file.write(',')
 
 text_file.close()
 
