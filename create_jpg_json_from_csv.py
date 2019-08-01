@@ -59,7 +59,7 @@ for jd in data:
 
 
 plot_rectangles(recs, sep_value)
-plt.savefig(out_path + '.jpg', dpi=3000)
+plt.savefig(out_path + '.jpg', dpi=4000)
 
 save_to_json(out_path + '.json', data, sep_value)
 
