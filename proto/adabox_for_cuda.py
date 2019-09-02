@@ -1,7 +1,7 @@
 
 import time
 import numpy as np
-from lib.tools import Rectangle, save_to_json
+from adabox.tools import Rectangle, save_to_json
 
 
 def get_right_bottom_rectangle(idx_i_arg, idx_j_arg, n_arg, m_arg):

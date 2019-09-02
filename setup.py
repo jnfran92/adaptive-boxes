@@ -22,7 +22,23 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
+        'Intended Audience :: Science/Research',
         "Operating System :: OS Independent",
+        'Topic :: Scientific/Engineering :: Decomposition Methods',
     ],
     python_requires='>=3.6',
+    install_requires=[
+            "certifi==2019.3.9",
+            "cycler==0.10.0",
+            "kiwisolver==1.1.0",
+            "matplotlib==3.1.1",
+            "numpy==1.17.1",
+            "pandas==0.25.1",
+            "plyfile==0.7",
+            "pyparsing==2.4.2",
+            "python-dateutil==2.8.0",
+            "pytz==2019.2",
+            "scipy==1.3.1",
+            "six==1.12.0",
+        ],
 )

@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from heuristic.lib.tools import *
+from adabox.tools import *
 import numpy as np
 
 import matplotlib.colors as colors

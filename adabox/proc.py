@@ -1,8 +1,5 @@
 
-import sys
-import time
 from multiprocessing import Pool
-
 from adabox.tools import *
 
 
@@ -89,105 +86,95 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
             (data_2d_global_arg[:, 1] >= rectangle.y1) & (data_2d_global_arg[:, 1] <= rectangle.y2))
     data_2d_global_arg[condition, 2] = rectangle_id
 
-
-if len(sys.argv) < 3:
-    print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(with .json)')
-    sys.exit()
-
-
-in_path = str(sys.argv[1])
-out_path = str(sys.argv[2])
-
-np_data = np.load(in_path)
-vertex_bottom_set = pd.DataFrame(np_data)
-vertex_bottom_set.columns = ['x', 'y', 'z']
-
-rectangles_list = []
-n_tests = 10
-
-# Heuristic parameters
-max_steps = 5000
-percent_max_steps = 0.9
-
-init_ab_ratio = (0.25, 6)
-false_counter_max_steps = int(0.2 * max_steps)
-
-# Create Global Matrix of points: []
-data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
-# Get separation Value
-sep_value = get_separation_value(data_2d_global)
-print(sep_value)
+#
+# if len(sys.argv) < 3:
+#     print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(with .json)')
+#     sys.exit()
+#
+#
+# in_path = '/Users/Juan/django_projects/adaptive-boxes/prepros/data_npy/squares.npy'
+# out_path = './'
+#
+# np_data = np.load(in_path)
+# vertex_bottom_set = pd.DataFrame(np_data)
+# vertex_bottom_set.columns = ['x', 'y', 'z']
+#
+#
+#
+# # Create Global Matrix of points: []
+# data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
 
 
-# Init Parallel
-pool = []
-if __name__ == '__main__':
-    pool = Pool()
-    print('Processes in Pool: ' + str(pool._processes))
+def decompose(data_2d_global_arg):
+    rectangles_list = []
+    n_tests = 10
 
-# Create Global Matrix of points: []
-data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
-# Get separation Value
-sep_value = get_separation_value(data_2d_global)
-print(sep_value)
+    # Heuristic parameters
+    max_steps = 5000
+    percent_max_steps = 0.9
 
-n_sqr = 0
-n_sqr_empty = 0
-recs = []
+    init_ab_ratio = (0.25, 6)
+    false_counter_max_steps = int(0.2 * max_steps)
 
-#   Loop
-start = time.time()
-while True:
-    # Select Data which is empty
-    condition_sqr = data_2d_global[:, 2] == n_sqr_empty
-    data_2d = data_2d_global[condition_sqr, :]
+    # Init Parallel
+    pool = []
+    if __name__ == '__main__':
+        pool = Pool()
+        print('Processes in Pool: ' + str(pool._processes))
 
-    # Break condition
-    if len(data_2d) == 0:
-        break
+    # Create Global Matrix of points: []
+    # data_2d_global_arg = create_2d_data_from_vertex(vertex_bottom_set)
+    # Get separation Value
 
-    n_searches = 200
+    sep_value = get_separation_value(data_2d_global_arg)
+    print(sep_value)
 
-    # Create args (SERIAL)
-    r_args = []
-    for i in range(n_searches):
-        rand_point = int(np.random.rand() * len(data_2d))
-        init_x = data_2d[rand_point][0]
-        init_y = data_2d[rand_point][1]
-        r_args.append(FindRectangleArgs(data_2d, sep_value, init_y, init_x))
-    # end_args = time.time()
+    n_sqr = 0
+    n_sqr_empty = 0
+    recs = []
 
-    recs_temp = pool.map(find_rectangle, r_args)
+    #   Loop
+    # start = time.time()
+    while True:
+        # Select Data which is empty
+        condition_sqr = data_2d_global_arg[:, 2] == n_sqr_empty
+        data_2d = data_2d_global_arg[condition_sqr, :]
 
-    # features array = [index, area, side_ratio]
-    features = np.zeros(shape=[n_searches, 3])
+        # Break condition
+        if len(data_2d) == 0:
+            break
 
-    for i in range(n_searches):
-        features[i, 0] = i
-        features[i, 1] = recs_temp[i].get_area()
-        features[i, 2] = recs_temp[i].get_side_ratio()
+        n_searches = 200
 
-    # Max
-    max_sqr_index = np.where(features[:, 1] == features[:, 1].max())[0][0]
+        # Create args (SERIAL)
+        r_args = []
+        for i in range(n_searches):
+            rand_point = int(np.random.rand() * len(data_2d))
+            init_x = data_2d[rand_point][0]
+            init_y = data_2d[rand_point][1]
+            r_args.append(FindRectangleArgs(data_2d, sep_value, init_y, init_x))
+        # end_args = time.time()
 
-    n_sqr += 1
-    save_rectangle(data_2d_global, recs_temp[max_sqr_index], n_sqr)
+        recs_temp = pool.map(find_rectangle, r_args)
 
-    recs.append(recs_temp[max_sqr_index])
+        # features array = [index, area, side_ratio]
+        features = np.zeros(shape=[n_searches, 3])
+
+        for i in range(n_searches):
+            features[i, 0] = i
+            features[i, 1] = recs_temp[i].get_area()
+            features[i, 2] = recs_temp[i].get_side_ratio()
+
+        # Max
+        max_sqr_index = np.where(features[:, 1] == features[:, 1].max())[0][0]
+
+        n_sqr += 1
+        save_rectangle(data_2d_global_arg, recs_temp[max_sqr_index], n_sqr)
+
+        recs.append(recs_temp[max_sqr_index])
 
 
-end = time.time()
-print('Work Finished!!!')
-print('Elapsed time: ' + str(end - start))
-
-# Save best data set
-best_set = recs
-array_to_save = np.zeros(shape=[len(best_set), 4])
-
-for x in range(len(best_set)):
-    array_to_save[x, 0] = best_set[x].x1
-    array_to_save[x, 1] = best_set[x].x2
-    array_to_save[x, 2] = best_set[x].y1
-    array_to_save[x, 3] = best_set[x].y2
-
-save_to_json(out_path, array_to_save, sep_value)
+# end = time.time()
+# print('Work Finished!!!')
+# print('Elapsed time: ' + str(end - start))
+#

@@ -1,8 +1,8 @@
 
 import sys
 
-from lib.plot_tools import plot_rectangles
-from lib.tools import load_from_json, Rectangle, save_to_json
+from adabox.plot_tools import plot_rectangles
+from adabox.tools import load_from_json, Rectangle, save_to_json
 import numpy as np
 import matplotlib.pyplot as plt
 plt.ioff()

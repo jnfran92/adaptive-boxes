@@ -1,6 +1,6 @@
 
 import matplotlib.pyplot as plt
-from heuristic.lib.tools import *
+from adabox.tools import *
 
 # To save .png file use bellow code
 # import matplotlib

@@ -3,7 +3,7 @@
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 
-from heuristic.lib.tools import *
+from adabox.tools import *
 
 colors_list = list(colors._colors_full_map.values())
 

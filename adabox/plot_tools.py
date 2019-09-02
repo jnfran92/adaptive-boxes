@@ -3,9 +3,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-from lib.tools import Rectangle
+from .tools import Rectangle
 from itertools import cycle
-cycol = cycle('bgrcmk')
+cycle_color = cycle('bgrcmk')
 
 
 def plot_rectangles(recs_arg, sep_value_arg):

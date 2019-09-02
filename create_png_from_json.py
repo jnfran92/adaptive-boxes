@@ -1,8 +1,8 @@
 
 import sys
 
-from lib.plot_tools import plot_rectangles
-from lib.tools import load_from_json, Rectangle
+from adabox.plot_tools import plot_rectangles
+from adabox.tools import load_from_json, Rectangle
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
