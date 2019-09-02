@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from adabox import proc
 from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 
+# Input Path
 in_path = '/Users/Juan/django_projects/adaptive-boxes/samples/sample_2.csv'
 
 # Load Demo data with columns [x_position y_position flag]
