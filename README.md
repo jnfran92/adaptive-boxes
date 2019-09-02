@@ -3,7 +3,7 @@ Python Library for rectangular decomposition of 2D binary images.
 
 <img src="./hires_images/intro_image.png" alt="sample1">
 
-See the CUDA GPU version: <a href="https://github.com/jnfran92/adaptive-boxes-gpu">adaptive-boxes-gpu</a>
+See also the ultra-fast CUDA GPU version: <a href="https://github.com/jnfran92/adaptive-boxes-gpu">adaptive-boxes-gpu</a>
 
 ## Quick Start
 
