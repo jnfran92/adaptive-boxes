@@ -9,7 +9,7 @@ See the CUDA GPU version: <a href="https://github.com/jnfran92/adaptive-boxes-gp
 
 Install `adabox` from PiP:
 
-    pip install -i https://test.pypi.org/simple/ adaptive-boxes
+    pip install adaptive-boxes
         
 
 Call **adaptive-boxes** library

@@ -11,7 +11,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="adaptive-boxes",
-    version="0.0.1",
+    version="0.0.2",
     author="Juan Francisco Chango",
     author_email="jnfran92@gmail.com",
     description="Python package for rectangular decomposition of 2D scenes/binary images",
@@ -24,7 +24,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         'Intended Audience :: Science/Research',
         "Operating System :: OS Independent",
-        'Topic :: Scientific/Engineering :: Decomposition Methods',
     ],
     python_requires='>=3.6',
     install_requires=[
