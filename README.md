@@ -1,7 +1,9 @@
 # Adaptive-Boxes
-Python Library for rectangular decomposition of 2D binary images!
+Python Library for rectangular decomposition of 2D binary images.
 
 <img src="./hires_images/intro.jpg" alt="sample1">
+
+See the CUDA GPU version: <a href="https://github.com/jnfran92/adaptive-boxes-gpu">adaptive-boxes-gpu</a>
 
 ## Quick Start
 
@@ -77,3 +79,6 @@ Each folder contains the next information:
 - proto: Prototype scripts
 - results: Results of the heuristic process (`.json` extension)
 - lib: library scripts
+
+## More info
+
