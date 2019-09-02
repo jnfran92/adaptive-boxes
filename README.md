@@ -1,6 +1,8 @@
 # Adaptive-Boxes
 Python Library for rectangular decomposition of 2D binary images!
 
+<img src="./hires_images/intro.jpg" alt="sample1">
+
 ## Quick Start
 
 Install `adabox` from PiP:
@@ -38,7 +40,9 @@ If you want to see data, plot using:
 Decompose data in rectangles, it returns a list of rectangles and a separation value needed to plot them.
 
     rectangles = []
-    (rectangles, sep_value) = proc.decompose(data_2d, 2)
+    # Number of random searches, more is better!
+    searches = 2        
+    (rectangles, sep_value) = proc.decompose(data_2d, searches)
     print('Number of rectangles found: ' + str(len(rectangles)))   
    
 
@@ -55,11 +59,13 @@ or
 
 `Adabox` applied over: `./sample_data/` files. Click in the images to expand.
 
-### File: `sample_1.csv`
+### Hi-res images
+
+#### File: `sample_1.csv`
 
 <img src="./hires_images/sample_1.jpg" alt="sample1">
 
-### File: `sample_2.csv`
+#### File: `sample_2.csv`
 
 <img src="./hires_images/sample_2.jpg" alt="sample2">
 
