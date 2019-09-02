@@ -2,7 +2,7 @@
 import numpy as np
 
 path = '/Users/Juan/django_projects/adaptive-boxes/proto/logs/data'
-in_file = 'log_hall10.csv_1:'
+in_file = 'log_boston12.csv_1'
 
 file = open(path + '/' + in_file, 'r')
 data_str = file.read()
