@@ -27,7 +27,7 @@ Initially, `flag = 0` (See `sample_data` folder).
 
     
     # Input Path
-    in_path = '/Users/Juan/django_projects/adaptive-boxes/samples/sample_2.csv'
+    in_path = './sample_data/sample_2.csv'
     
     # Load Demo data with columns [x_position y_position flag]
     data_2d = np.loadtxt(in_path, delimiter=",")
