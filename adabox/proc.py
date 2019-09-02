@@ -104,30 +104,24 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
 # # Create Global Matrix of points: []
 # data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
 
+#
+# # Init Parallel
+# pool = []
+# if __name__ == '__main__':
+#     pool = Pool()
+#     print('Processes in Pool: ' + str(pool._processes))
 
-def decompose(data_2d_global_arg):
-    rectangles_list = []
-    n_tests = 10
 
+def decompose(data_2d_global_arg, n_searches_per_step):
+
+    data_2d_global = data_2d_global_arg.copy()
+    pool = Pool()
+    print('Using ' + str(pool._processes) + ' process(threads) and '
+          + str(n_searches_per_step) + ' searches per step')
     # Heuristic parameters
-    max_steps = 5000
-    percent_max_steps = 0.9
 
-    init_ab_ratio = (0.25, 6)
-    false_counter_max_steps = int(0.2 * max_steps)
-
-    # Init Parallel
-    pool = []
-    if __name__ == '__main__':
-        pool = Pool()
-        print('Processes in Pool: ' + str(pool._processes))
-
-    # Create Global Matrix of points: []
-    # data_2d_global_arg = create_2d_data_from_vertex(vertex_bottom_set)
-    # Get separation Value
-
-    sep_value = get_separation_value(data_2d_global_arg)
-    print(sep_value)
+    sep_value = get_separation_value(data_2d_global)
+    # print(sep_value)
 
     n_sqr = 0
     n_sqr_empty = 0
@@ -137,18 +131,18 @@ def decompose(data_2d_global_arg):
     # start = time.time()
     while True:
         # Select Data which is empty
-        condition_sqr = data_2d_global_arg[:, 2] == n_sqr_empty
-        data_2d = data_2d_global_arg[condition_sqr, :]
+        condition_sqr = data_2d_global[:, 2] == n_sqr_empty
+        data_2d = data_2d_global[condition_sqr, :]
 
         # Break condition
         if len(data_2d) == 0:
             break
 
-        n_searches = 200
+        # n_searches = 200
 
         # Create args (SERIAL)
         r_args = []
-        for i in range(n_searches):
+        for i in range(n_searches_per_step):
             rand_point = int(np.random.rand() * len(data_2d))
             init_x = data_2d[rand_point][0]
             init_y = data_2d[rand_point][1]
@@ -158,9 +152,9 @@ def decompose(data_2d_global_arg):
         recs_temp = pool.map(find_rectangle, r_args)
 
         # features array = [index, area, side_ratio]
-        features = np.zeros(shape=[n_searches, 3])
+        features = np.zeros(shape=[n_searches_per_step, 3])
 
-        for i in range(n_searches):
+        for i in range(n_searches_per_step):
             features[i, 0] = i
             features[i, 1] = recs_temp[i].get_area()
             features[i, 2] = recs_temp[i].get_side_ratio()
@@ -169,12 +163,8 @@ def decompose(data_2d_global_arg):
         max_sqr_index = np.where(features[:, 1] == features[:, 1].max())[0][0]
 
         n_sqr += 1
-        save_rectangle(data_2d_global_arg, recs_temp[max_sqr_index], n_sqr)
+        save_rectangle(data_2d_global, recs_temp[max_sqr_index], n_sqr)
 
         recs.append(recs_temp[max_sqr_index])
 
-
-# end = time.time()
-# print('Work Finished!!!')
-# print('Elapsed time: ' + str(end - start))
-#
+    return recs, sep_value
