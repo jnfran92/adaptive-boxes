@@ -1,5 +1,5 @@
 # Adaptive-Boxes
-Python Library for rectangular covering in 2D binary images!
+Python Library for rectangular decomposition of 2D binary images!
 
 ## Content
 
