@@ -86,30 +86,6 @@ def save_rectangle(data_2d_global_arg, rectangle: Rectangle, rectangle_id):
             (data_2d_global_arg[:, 1] >= rectangle.y1) & (data_2d_global_arg[:, 1] <= rectangle.y2))
     data_2d_global_arg[condition, 2] = rectangle_id
 
-#
-# if len(sys.argv) < 3:
-#     print('ERROR Args number. Needed: \n[1]In Path(with file.npy) -- prepros file \n[2]Out Path(with .json)')
-#     sys.exit()
-#
-#
-# in_path = '/Users/Juan/django_projects/adaptive-boxes/prepros/data_npy/squares.npy'
-# out_path = './'
-#
-# np_data = np.load(in_path)
-# vertex_bottom_set = pd.DataFrame(np_data)
-# vertex_bottom_set.columns = ['x', 'y', 'z']
-#
-#
-#
-# # Create Global Matrix of points: []
-# data_2d_global = create_2d_data_from_vertex(vertex_bottom_set)
-
-#
-# # Init Parallel
-# pool = []
-# if __name__ == '__main__':
-#     pool = Pool()
-#     print('Processes in Pool: ' + str(pool._processes))
 
 
 def decompose(data_2d_global_arg, n_searches_per_step):
