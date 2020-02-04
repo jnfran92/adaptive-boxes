@@ -3,17 +3,14 @@
 # Create simulation data from adaptive boxes results
 ##
 
-import numpy as np
-
-from adabox.tools import load_from_json
-from postproc_gpu.tools import create_groups, get_xy_units
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
+from postproc_gpu.tools import create_groups, get_xy_units
 
 colors_list = list(colors._colors_full_map.values())
-# plt.ioff()
 
 
 in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/squares_gpu.csv"      # .csv
@@ -48,7 +45,7 @@ for rec in data_prepros:
 
 
 # Save in a csv file
-n_split_sep_value = 3
+n_split_sep_value = 10
 error_val = 0.05
 y_units, x_units = get_xy_units(data_prepros, sep_value, n_split_sep_value, error_val)
 
@@ -82,40 +79,11 @@ for y_unit in y_units:
 x_unit_df = pd.DataFrame(x_unit_list)
 y_unit_df = pd.DataFrame(y_unit_list)
 
-x_unit_df.to_csv(out_path+"/x_units.csv", header=None)
-y_unit_df.to_csv(out_path+"/y_units.csv", header=None)
+x_unit_df.to_csv(out_path+"/x_units.csv", header=None, index=None)
+y_unit_df.to_csv(out_path+"/y_units.csv", header=None, index=None)
 
 
-
-
-
-# Save in a h file (C++)
-#
-#
-# data_m = data_matrix.shape[0]
-# data_n = data_matrix.shape[1]
-#
-# np.array_str(data_matrix.flatten())
-#
-# text_file = open(out_path, "w")
-# text_file.write('long m = %d; \nlong n = %d; \n\n' % (data_m, data_n))
-# text_file.write('int data[%ld] = { \n' % (data_m*data_n))
-#
-#
-# for i in range(data_m):
-#     for j in range(data_n):
-#         text_file.write('%d, ' % data_matrix[i][j])
-#     text_file.write('\n')
-#
-#
-# text_file.write('};\n\n')
-# text_file.close()
-#
-# print("Work Finished!!")
-
-
-
-
-
-
-
+# Saving summary
+summary_groups = pd.DataFrame(summary)
+summary_groups.iloc[:, 2:] = summary_groups.iloc[:, 2:] * n_split_sep_value
+summary_groups.to_csv(out_path+"/summary_groups.csv", header=False, index=None)
