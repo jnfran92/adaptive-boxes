@@ -45,7 +45,7 @@ for rec in data_prepros:
 
 
 # Save in a csv file
-n_split_sep_value = 10
+n_split_sep_value = 100
 error_val = 0.05
 y_units, x_units = get_xy_units(data_prepros, sep_value, n_split_sep_value, error_val)
 
@@ -86,4 +86,4 @@ y_unit_df.to_csv(out_path+"/y_units.csv", header=None, index=None)
 # Saving summary
 summary_groups = pd.DataFrame(summary)
 summary_groups.iloc[:, 2:] = summary_groups.iloc[:, 2:] * n_split_sep_value
-summary_groups.to_csv(out_path+"/summary_groups.csv", header=False, index=None)
+summary_groups.to_csv(out_path+"/summary_groups.csv", header=None, index=None)
