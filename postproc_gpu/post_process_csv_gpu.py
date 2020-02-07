@@ -1,3 +1,4 @@
+
 ##
 # Create simulation data from adaptive boxes results
 ##
@@ -22,25 +23,25 @@ groups_details, summary = create_groups(data, sep_value)
 
 for s in summary:
     print(s)
-
-# Plot Rectangles by groups
-plt.figure()
-for rec in groups_details:
-    x1 = rec[0]
-    x2 = rec[1]
-    y1 = rec[2]
-    y2 = rec[3]
-
-    p1 = np.array([x1, y1])
-    p2 = np.array([x1, y2])
-    p3 = np.array([x2, y1])
-    p4 = np.array([x2, y2])
-
-    ps = np.array([p1, p2, p4, p3, p1])
-    plt.plot(ps[:, 0], ps[:, 1])
+#
+# # Plot Rectangles by groups
+# plt.figure()
+# for rec in groups_details:
+#     x1 = rec[0]
+#     x2 = rec[1]
+#     y1 = rec[2]
+#     y2 = rec[3]
+#
+#     p1 = np.array([x1, y1])
+#     p2 = np.array([x1, y2])
+#     p3 = np.array([x2, y1])
+#     p4 = np.array([x2, y2])
+#
+#     ps = np.array([p1, p2, p4, p3, p1])
+#     plt.plot(ps[:, 0], ps[:, 1])
 
 # Save in a csv file
-n_split_sep_value = 20
+n_split_sep_value = 30
 error_val = 0.05
 y_units, x_units = get_xy_units(groups_details, sep_value, n_split_sep_value, error_val)
 
@@ -113,11 +114,8 @@ groups_details_subset_df.loc[:, 'y2'] = groups_details_subset_df.loc[:, 'y2'] + 
 groups_details_subset_df.to_csv(out_path + "/group_details.csv", header=True, index=None)
 
 
-
-
 # Plot Rectangles by groups
 plt.figure()
-
 for i in range(groups_details_subset_df.shape[0]):
     rec = groups_details_subset_df.iloc[i, :]
     x1 = rec[0]
