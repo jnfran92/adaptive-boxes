@@ -1,4 +1,3 @@
-
 ##
 # Create simulation data from adaptive boxes results
 ##
@@ -12,24 +11,21 @@ from postproc_gpu.tools import create_groups, get_xy_units
 
 colors_list = list(colors._colors_full_map.values())
 
-
-in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/squares_gpu.csv"      # .csv
-out_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/csv_out_data"    # .csv
-
+in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/squares_gpu.csv"  # .csv
+out_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/csv_out_data"  # .csv
 
 data = np.array(pd.read_csv(in_path, header=None))
 sep_value = 1
 
 # data prepros adds boundaries to json rectangles
-data_prepros, summary = create_groups(data, sep_value)
+groups_details, summary = create_groups(data, sep_value)
 
 for s in summary:
     print(s)
 
-
 # Plot Rectangles by groups
 plt.figure()
-for rec in data_prepros:
+for rec in groups_details:
     x1 = rec[0]
     x2 = rec[1]
     y1 = rec[2]
@@ -43,12 +39,10 @@ for rec in data_prepros:
     ps = np.array([p1, p2, p4, p3, p1])
     plt.plot(ps[:, 0], ps[:, 1])
 
-
 # Save in a csv file
-n_split_sep_value = 100
+n_split_sep_value = 20
 error_val = 0.05
-y_units, x_units = get_xy_units(data_prepros, sep_value, n_split_sep_value, error_val)
-
+y_units, x_units = get_xy_units(groups_details, sep_value, n_split_sep_value, error_val)
 
 # Creating units
 x_unit_list = []
@@ -61,7 +55,6 @@ for x_unit in x_units:
                         x_unit.group[1][1],
                         x_unit.position[1],
                         ])
-
 
 y_unit_list = []
 for y_unit in y_units:
@@ -79,11 +72,29 @@ for y_unit in y_units:
 x_unit_df = pd.DataFrame(x_unit_list)
 y_unit_df = pd.DataFrame(y_unit_list)
 
-x_unit_df.to_csv(out_path+"/x_units.csv", header=None, index=None)
-y_unit_df.to_csv(out_path+"/y_units.csv", header=None, index=None)
+c_names_interfaces = ['group_0',
+                      'partition_0',
+                      'interface_position_0',
+                      'group_1',
+                      'partition_1',
+                      'interface_position_1']
 
+x_unit_df.columns = c_names_interfaces
+y_unit_df.columns = c_names_interfaces
+
+x_unit_df.to_csv(out_path + "/x_units.csv", header=True, index=None)
+y_unit_df.to_csv(out_path + "/y_units.csv", header=True, index=None)
 
 # Saving summary
 summary_groups = pd.DataFrame(summary)
 summary_groups.iloc[:, 2:] = summary_groups.iloc[:, 2:] * n_split_sep_value
-summary_groups.to_csv(out_path+"/summary_groups.csv", header=None, index=None)
+
+summary_groups.columns = ['gi', 'gj', 'num_div_y', 'num_div_x']
+summary_groups.to_csv(out_path + "/summary_groups.csv", header=True, index=None)
+
+# saving groups details
+groups_details_df = pd.DataFrame(groups_details)
+# header: x1 x2 y1 y2 is_checked? gi gj
+subset = groups_details_df[[0, 1, 2, 3, 5, 6]]
+subset.columns = ['x1', 'x2', 'y1', 'y2', 'gi', 'gj']
+subset.to_csv(out_path + "/group_details.csv", header=True, index=None)
