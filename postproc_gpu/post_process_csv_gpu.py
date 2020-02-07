@@ -95,6 +95,40 @@ summary_groups.to_csv(out_path + "/summary_groups.csv", header=True, index=None)
 # saving groups details
 groups_details_df = pd.DataFrame(groups_details)
 # header: x1 x2 y1 y2 is_checked? gi gj
-subset = groups_details_df[[0, 1, 2, 3, 5, 6]]
-subset.columns = ['x1', 'x2', 'y1', 'y2', 'gi', 'gj']
-subset.to_csv(out_path + "/group_details.csv", header=True, index=None)
+#     |-------------o(x2,y2)|
+#     |                     |
+#     |                     |
+#     |o(x1,y1)-------------|
+groups_details_subset_df = groups_details_df[[0, 1, 2, 3, 5, 6]]
+groups_details_subset_df.columns = ['x1', 'x2', 'y1', 'y2', 'gi', 'gj']
+# Normalizing
+x_offset = abs(groups_details_subset_df.loc[:, 'x1'].min())
+groups_details_subset_df.loc[:, 'x1'] = groups_details_subset_df.loc[:, 'x1'] + x_offset
+groups_details_subset_df.loc[:, 'x2'] = groups_details_subset_df.loc[:, 'x2'] + x_offset
+
+y_offset = abs(groups_details_subset_df.loc[:, 'y1'].min())
+groups_details_subset_df.loc[:, 'y1'] = groups_details_subset_df.loc[:, 'y1'] + y_offset
+groups_details_subset_df.loc[:, 'y2'] = groups_details_subset_df.loc[:, 'y2'] + y_offset
+
+groups_details_subset_df.to_csv(out_path + "/group_details.csv", header=True, index=None)
+
+
+
+
+# Plot Rectangles by groups
+plt.figure()
+
+for i in range(groups_details_subset_df.shape[0]):
+    rec = groups_details_subset_df.iloc[i, :]
+    x1 = rec[0]
+    x2 = rec[1]
+    y1 = rec[2]
+    y2 = rec[3]
+
+    p1 = np.array([x1, y1])
+    p2 = np.array([x1, y2])
+    p3 = np.array([x2, y1])
+    p4 = np.array([x2, y2])
+
+    ps = np.array([p1, p2, p4, p3, p1])
+    plt.plot(ps[:, 0], ps[:, 1])
