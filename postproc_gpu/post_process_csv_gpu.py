@@ -12,7 +12,7 @@ from postproc_gpu.tools import create_groups, get_xy_units
 
 colors_list = list(colors._colors_full_map.values())
 
-in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/boston_gpu.csv"  # .csv
+in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/hall_gpu.csv"  # .csv
 out_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/csv_out_data"  # .csv
 
 data = np.array(pd.read_csv(in_path, header=None))
