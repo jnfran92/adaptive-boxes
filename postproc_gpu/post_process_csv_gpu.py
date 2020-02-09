@@ -104,12 +104,12 @@ groups_details_subset_df = groups_details_df[[0, 1, 2, 3, 5, 6]]
 groups_details_subset_df.columns = ['x1', 'x2', 'y1', 'y2', 'gi', 'gj']
 # Normalizing
 x_offset = abs(groups_details_subset_df.loc[:, 'x1'].min())
-groups_details_subset_df.loc[:, 'x1'] = groups_details_subset_df.loc[:, 'x1'] + x_offset
-groups_details_subset_df.loc[:, 'x2'] = groups_details_subset_df.loc[:, 'x2'] + x_offset
+groups_details_subset_df.loc[:, 'x1'] = n_split_sep_value * (groups_details_subset_df.loc[:, 'x1'] + x_offset)
+groups_details_subset_df.loc[:, 'x2'] = n_split_sep_value * (groups_details_subset_df.loc[:, 'x2'] + x_offset)
 
 y_offset = abs(groups_details_subset_df.loc[:, 'y1'].min())
-groups_details_subset_df.loc[:, 'y1'] = groups_details_subset_df.loc[:, 'y1'] + y_offset
-groups_details_subset_df.loc[:, 'y2'] = groups_details_subset_df.loc[:, 'y2'] + y_offset
+groups_details_subset_df.loc[:, 'y1'] = n_split_sep_value * (groups_details_subset_df.loc[:, 'y1'] + y_offset)
+groups_details_subset_df.loc[:, 'y2'] = n_split_sep_value * (groups_details_subset_df.loc[:, 'y2'] + y_offset)
 
 groups_details_subset_df.to_csv(out_path + "/group_details.csv", header=True, index=None)
 
@@ -130,3 +130,4 @@ for i in range(groups_details_subset_df.shape[0]):
 
     ps = np.array([p1, p2, p4, p3, p1])
     plt.plot(ps[:, 0], ps[:, 1])
+
