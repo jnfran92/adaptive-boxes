@@ -90,7 +90,7 @@ y_unit_df.to_csv(out_path + "/y_units.csv", header=True, index=None)
 summary_groups = pd.DataFrame(summary)
 summary_groups.iloc[:, 2:] = summary_groups.iloc[:, 2:] * n_split_sep_value
 
-summary_groups.columns = ['gi', 'gj', 'num_div_y', 'num_div_x']
+summary_groups.columns = ['n_group', 'n_partitions', 'num_div_y', 'num_div_x']
 summary_groups.to_csv(out_path + "/summary_groups.csv", header=True, index=None)
 
 # saving groups details
