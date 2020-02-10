@@ -1,24 +1,60 @@
 
 import matplotlib.pyplot as plt
 import networkx as nx
+import pandas as pd
+from matplotlib import pylab
 
-summary_groups_data_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/boston/summary_groups.csv'
+
+summary_groups_data_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/hall/summary_groups.csv'
+x_units_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/hall/x_units.csv'
+y_units_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/hall/y_units.csv'
 
 
+summary_groups = pd.read_csv(summary_groups_data_path)
+x_units = pd.read_csv(x_units_path)
+y_units = pd.read_csv(y_units_path)
 
+
+# Creating Graphs
 G = nx.Graph()
+# n_total_nodes = summary_groups['n_partitions'].sum()
+n_total_nodes = summary_groups.shape[0]
 
-G.add_node(1)
-G.add_node(2)
-G.add_node(3)
-G.add_node(4)
-G.add_node(5)
-G.add_edge(1, 2)
-
-G.number_of_nodes()
-G.number_of_edges()
+H = nx.path_graph(n_total_nodes)
+G.add_nodes_from(H)
 
 
-nx.draw(G, with_labels=True)
+for idx, row in x_units.iterrows():
+    # print(row)
+    gi_0 = row['group_0']
+    gj_0 = row['partition_0']
+    gi_1 = row['group_1']
+    gj_1 = row['partition_1']
+    G.add_edge(gi_0, gi_1)
+
+
+for idx, row in y_units.iterrows():
+    # print(row)
+    gi_0 = row['group_0']
+    gj_0 = row['partition_0']
+    gi_1 = row['group_1']
+    gj_1 = row['partition_1']
+    G.add_edge(gi_0, gi_1)
+
+
+print(G.number_of_nodes())
+print(G.number_of_edges())
+
+
+options = {
+     'node_color': 'yellow',
+     'node_size': 50,
+     'edge_color': 'red',
+     'width': 0.5,
+}
+
+# save_graph(G, "./my_graph.pdf")
+
+nx.draw(G, with_labels=True, **options)
 plt.show()
 
