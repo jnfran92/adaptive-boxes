@@ -48,13 +48,16 @@ print(G.number_of_edges())
 
 options = {
      'node_color': 'yellow',
-     'node_size': 50,
+     'node_size': 80,
      'edge_color': 'red',
      'width': 0.5,
+     'font_size': 8,
+     'font_color': 'black',
 }
 
 # save_graph(G, "./my_graph.pdf")
 
+# nx.draw(G, **options)
 nx.draw(G, with_labels=True, **options)
 plt.show()
 
