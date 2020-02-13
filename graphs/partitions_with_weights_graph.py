@@ -60,7 +60,34 @@ y_units['p1_code'] = codes_df[1]
 
 
 
+gs_tmp = x_units.groupby('p0_code')
+p0_keys_tmp = list(gs_tmp.groups.keys())
 
+g_tmp = gs_tmp.get_group('88_0')
+
+
+
+
+gs_tmp = x_units.groupby('p1_code')
+p1_keys_tmp = list(gs_tmp.groups.keys())
+
+
+
+global_keys = []
+global_keys.extend(p0_keys_tmp)
+global_keys.extend(p1_keys_tmp)
+
+
+def remove_duplicates(l):
+    return list(set(l))
+
+
+global_keys_no_duplicates = remove_duplicates(global_keys)
+
+
+
+
+n_total_nodes = summary_groups.shape[0]
 
 
 
