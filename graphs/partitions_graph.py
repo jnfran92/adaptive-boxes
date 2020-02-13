@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
+from networkx.readwrite import json_graph, write_gexf
 from matplotlib import pylab
 
 
@@ -61,3 +62,7 @@ options = {
 nx.draw(G, with_labels=True, **options)
 plt.show()
 
+nx.write_gexf(G, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/hall.gexf")
+
+# Info
+print(nx.info(G))
