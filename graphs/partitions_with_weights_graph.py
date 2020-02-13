@@ -59,19 +59,12 @@ y_units['p0_code'] = codes_df[0]
 y_units['p1_code'] = codes_df[1]
 
 
-
+## Getting al keys
 gs_tmp = x_units.groupby('p0_code')
 p0_keys_tmp = list(gs_tmp.groups.keys())
 
-g_tmp = gs_tmp.get_group('88_0')
-
-
-
-
 gs_tmp = x_units.groupby('p1_code')
 p1_keys_tmp = list(gs_tmp.groups.keys())
-
-
 
 global_keys = []
 global_keys.extend(p0_keys_tmp)
@@ -83,6 +76,36 @@ def remove_duplicates(l):
 
 
 global_keys_no_duplicates = remove_duplicates(global_keys)
+
+
+# Getting edges
+gs_tmp = x_units.groupby('p0_code')
+keys_tmp_level_0 = list(gs_tmp.groups.keys())
+g_tmp = gs_tmp.get_group(keys_tmp_level_0[0])
+
+
+ggs_tmp = g_tmp.groupby('p1_code')
+keys_tmp_level_1 = list(ggs_tmp.groups.keys())
+weight_tmp = ggs_tmp.groups.get(keys_tmp_level_1[0]).size
+print(weight_tmp)
+
+
+# getting edges Loop
+gs_tmp = x_units.groupby('p0_code')
+keys_tmp_level_0 = list(gs_tmp.groups.keys())
+for k0 in keys_tmp_level_0:
+    print(k0)
+    g_tmp = gs_tmp.get_group(k0)
+
+    ggs_tmp = g_tmp.groupby('p1_code')
+    keys_tmp_level_1 = list(ggs_tmp.groups.keys())
+    for k1 in keys_tmp_level_1:
+        print("     %s" % k1)
+        weight_tmp = ggs_tmp.groups.get(k1).size
+        print("         %d" % weight_tmp)
+
+
+
 
 
 
