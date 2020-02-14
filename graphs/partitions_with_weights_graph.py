@@ -93,7 +93,7 @@ print(weight_tmp)
 # getting edges Loop x_units
 edges = []
 #   x units
-color = "r"
+color = 0
 gs_tmp = x_units.groupby('p0_code')
 keys_tmp_level_0 = list(gs_tmp.groups.keys())
 for k0 in keys_tmp_level_0:
@@ -110,7 +110,7 @@ for k0 in keys_tmp_level_0:
 
 
 #   y units
-color = "y"
+color = 1
 gs_tmp = y_units.groupby('p0_code')
 keys_tmp_level_0 = list(gs_tmp.groups.keys())
 for k0 in keys_tmp_level_0:
@@ -123,7 +123,7 @@ for k0 in keys_tmp_level_0:
         print("     %s" % k1)
         weight_tmp = ggs_tmp.groups.get(k1).size
         print("         %d" % weight_tmp)
-        edges.append((k0, k1, weight_tmp, color))
+        edges.append((k0, k1, float(weight_tmp), color))
 
 
 n_total_nodes = global_keys_no_duplicates.__len__()
@@ -151,7 +151,6 @@ nodes_df.columns = ['code', 'area']
 nodes_df = nodes_df.set_index('code')
 
 
-
 # Creating Graph
 g = nx.Graph()
 
@@ -168,15 +167,20 @@ print(g.number_of_nodes())
 print(g.number_of_edges())
 
 
-
 # Define data structure (list) of edge colors for plotting
 edge_colors = [e[2]['attr_dict']['color'] for e in g.edges(data=True)]
 
 
+# Define areas
+node_areas = nodes_df.to_dict()['area']
+
 # Plotting
 plt.figure(figsize=(8, 6))
 nx.draw(g, edge_color=edge_colors, node_size=10, node_color='black')
+
+# nx.draw_shell(g, edge_color=edge_colors, node_size=10, node_color='black')
 plt.title('Graph Representation of Sleeping Giant Trail Map', size=15)
 plt.show()
 
-
+# Save
+nx.write_gexf(g, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/hall.gexf")
