@@ -59,7 +59,7 @@ y_units['p0_code'] = codes_df[0]
 y_units['p1_code'] = codes_df[1]
 
 
-## Getting al keys
+# Getting al keys
 gs_tmp = x_units.groupby('p0_code')
 p0_keys_tmp = list(gs_tmp.groups.keys())
 
@@ -78,7 +78,7 @@ def remove_duplicates(l):
 global_keys_no_duplicates = remove_duplicates(global_keys)
 
 
-# Getting edges
+# Getting edges x_units
 gs_tmp = x_units.groupby('p0_code')
 keys_tmp_level_0 = list(gs_tmp.groups.keys())
 g_tmp = gs_tmp.get_group(keys_tmp_level_0[0])
@@ -90,7 +90,10 @@ weight_tmp = ggs_tmp.groups.get(keys_tmp_level_1[0]).size
 print(weight_tmp)
 
 
-# getting edges Loop
+# getting edges Loop x_units
+edges = []
+#   x units
+color = "r"
 gs_tmp = x_units.groupby('p0_code')
 keys_tmp_level_0 = list(gs_tmp.groups.keys())
 for k0 in keys_tmp_level_0:
@@ -103,65 +106,82 @@ for k0 in keys_tmp_level_0:
         print("     %s" % k1)
         weight_tmp = ggs_tmp.groups.get(k1).size
         print("         %d" % weight_tmp)
+        edges.append((k0, k1, weight_tmp, color))
+
+
+#   y units
+color = "y"
+gs_tmp = y_units.groupby('p0_code')
+keys_tmp_level_0 = list(gs_tmp.groups.keys())
+for k0 in keys_tmp_level_0:
+    print(k0)
+    g_tmp = gs_tmp.get_group(k0)
+
+    ggs_tmp = g_tmp.groupby('p1_code')
+    keys_tmp_level_1 = list(ggs_tmp.groups.keys())
+    for k1 in keys_tmp_level_1:
+        print("     %s" % k1)
+        weight_tmp = ggs_tmp.groups.get(k1).size
+        print("         %d" % weight_tmp)
+        edges.append((k0, k1, weight_tmp, color))
+
+
+n_total_nodes = global_keys_no_duplicates.__len__()
+
+
+#   Creating data frame of edges
+edges_df = pd.DataFrame(edges)
+edges_df.columns = ['p0', 'p1', 'weight', 'color']
+
+
+# Getting Node Attributes
+nodes_list = []
+for k in global_keys_no_duplicates:
+    k_indexes_tmp = k.split("_")
+    # print(k_indexes_tmp)
+    condition_tmp = summary_groups['n_group'] == int(k_indexes_tmp[0])
+    smg_tmp = summary_groups[condition_tmp]
+    # print(smg_tmp['num_div_x'].iloc[0] * smg_tmp['num_div_y'].iloc[0])
+    area_tmp = smg_tmp['num_div_x'].iloc[0] * smg_tmp['num_div_y'].iloc[0]
+    nodes_list.append((k, area_tmp))
+
+
+nodes_df = pd.DataFrame(nodes_list)
+nodes_df.columns = ['code', 'area']
+nodes_df = nodes_df.set_index('code')
 
 
 
 
 
 
+# Creating Graph
+g = nx.Graph()
 
-n_total_nodes = summary_groups.shape[0]
-
-
-
-
-# Creating Graphs
-G = nx.Graph()
-# n_total_nodes = summary_groups['n_partitions'].sum()
-n_total_nodes = summary_groups.shape[0]
-
-H = nx.path_graph(n_total_nodes)
-G.add_nodes_from(H)
+# Add edges attributes
+for i, tmp_row in edges_df.iterrows():
+    g.add_edge(tmp_row[0], tmp_row[1], attr_dict=tmp_row[2:].to_dict())
 
 
-for idx, row in x_units.iterrows():
-    # print(row)
-    gi_0 = row['group_0']
-    gj_0 = row['partition_0']
-    gi_1 = row['group_1']
-    gj_1 = row['partition_1']
-    G.add_edge(gi_0, gi_1)
+
+#
+# # Add nodes attributes
+# for i, tmp_row in nodes_df.iterrows():
+#     g.nodes[tmp_row['code']] = tmp_row[1:].to_dict()
+
+print(g.number_of_nodes())
+print(g.number_of_edges())
 
 
-for idx, row in y_units.iterrows():
-    # print(row)
-    gi_0 = row['group_0']
-    gj_0 = row['partition_0']
-    gi_1 = row['group_1']
-    gj_1 = row['partition_1']
-    G.add_edge(gi_0, gi_1)
+
+# Define data structure (list) of edge colors for plotting
+edge_colors = [e[2]['attr_dict']['color'] for e in g.edges(data=True)]
 
 
-print(G.number_of_nodes())
-print(G.number_of_edges())
-
-
-options = {
-     'node_color': 'yellow',
-     'node_size': 80,
-     'edge_color': 'red',
-     'width': 0.5,
-     'font_size': 8,
-     'font_color': 'black',
-}
-
-# save_graph(G, "./my_graph.pdf")
-
-# nx.draw(G, **options)
-nx.draw(G, with_labels=True, **options)
+# Plotting
+plt.figure(figsize=(8, 6))
+nx.draw(g, edge_color=edge_colors, node_size=10, node_color='black')
+plt.title('Graph Representation of Sleeping Giant Trail Map', size=15)
 plt.show()
 
-nx.write_gexf(G, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/hall.gexf")
 
-# Info
-print(nx.info(G))
