@@ -152,9 +152,6 @@ nodes_df = nodes_df.set_index('code')
 
 
 
-
-
-
 # Creating Graph
 g = nx.Graph()
 
@@ -163,11 +160,9 @@ for i, tmp_row in edges_df.iterrows():
     g.add_edge(tmp_row[0], tmp_row[1], attr_dict=tmp_row[2:].to_dict())
 
 
+# Setting Areas
+nx.set_node_attributes(g, nodes_df.transpose().to_dict())
 
-#
-# # Add nodes attributes
-# for i, tmp_row in nodes_df.iterrows():
-#     g.nodes[tmp_row['code']] = tmp_row[1:].to_dict()
 
 print(g.number_of_nodes())
 print(g.number_of_edges())
