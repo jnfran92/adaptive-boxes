@@ -21,3 +21,7 @@ Graph above improved using `Gephi`:
 Using partitions data: `./partitions_data/boston/*`
 
  <img src="./imgs/boston.png" width="600">
+
+Graph above improved using `Gephi`:
+
+<img src="./imgs/boston_gephi.png" width="600">
