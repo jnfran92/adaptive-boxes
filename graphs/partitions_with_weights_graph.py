@@ -7,9 +7,9 @@ from networkx.readwrite import json_graph, write_gexf
 from matplotlib import pylab
 
 
-summary_groups_data_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/hall/summary_groups.csv'
-x_units_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/hall/x_units.csv'
-y_units_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/hall/y_units.csv'
+summary_groups_data_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/boston/summary_groups.csv'
+x_units_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/boston/x_units.csv'
+y_units_path = '/Users/Juan/django_projects/adaptive-boxes/graphs/partitions_data/boston/y_units.csv'
 
 
 summary_groups = pd.read_csv(summary_groups_data_path)
@@ -183,4 +183,4 @@ plt.title('Graph Representation of Sleeping Giant Trail Map', size=15)
 plt.show()
 
 # Save
-nx.write_gexf(g, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/hall.gexf")
+nx.write_gexf(g, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/boston.gexf")
