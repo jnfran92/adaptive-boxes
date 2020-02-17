@@ -131,7 +131,7 @@ n_total_nodes = global_keys_no_duplicates.__len__()
 
 #   Creating data frame of edges
 edges_df = pd.DataFrame(edges)
-edges_df.columns = ['p0', 'p1', 'weight', 'color']
+edges_df.columns = ['p0', 'p1', 'Weight', 'color']
 
 
 # Getting Node Attributes
@@ -156,7 +156,7 @@ g = nx.Graph()
 
 # Add edges attributes
 for i, tmp_row in edges_df.iterrows():
-    g.add_edge(tmp_row[0], tmp_row[1], attr_dict=tmp_row[2:].to_dict())
+    g.add_edge(tmp_row[0], tmp_row[1], weight=tmp_row[2] ,attr_dict=tmp_row[2:].to_dict())
 
 
 # Setting Areas
