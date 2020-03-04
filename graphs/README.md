@@ -2,6 +2,7 @@
 
 Visualize, analyze and optimize decomposed partitions.
 
+**Note: Files will not be updated, new [repo](https://github.com/jnfran92/gard) was created for handling this section**
 
 ## Samples
 
