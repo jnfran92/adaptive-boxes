@@ -9,7 +9,7 @@ plt.ioff()
 
 
 if len(sys.argv) < 3:
-    print('ERROR args. Needed \n[1]in_path(.json) \n[2]out_path(.jpg)')
+    print('ERROR args. Needed \n[1]in_path(.csv) \n[2]out_path(no extension)')
     sys.exit()
 
 in_path = str(sys.argv[1])      # .json
