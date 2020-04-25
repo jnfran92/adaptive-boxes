@@ -1,7 +1,7 @@
 
 import sys
 
-from adabox.plot_tools import plot_rectangles
+from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 from adabox.tools import load_from_json, Rectangle, save_to_json
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,6 +27,11 @@ for jd in data:
 
 plot_rectangles(recs, sep_value)
 plt.savefig(out_path + '.jpg', dpi=4000)
+
+
+plot_rectangles_only_lines(recs, sep_value)
+plt.savefig(out_path + '_lines.jpg', dpi=4000)
+
 
 save_to_json(out_path + '.json', data, sep_value)
 
