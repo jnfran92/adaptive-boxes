@@ -12,8 +12,8 @@ from postproc_gpu.tools import create_groups, get_xy_units
 
 colors_list = list(colors._colors_full_map.values())
 
-in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/boston_gpu.csv"  # .csv
-out_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/csv_out_data"  # .csv
+in_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/gpu_csv/humboldt.csv"  # .csv
+out_path = "/Users/Juan/django_projects/adaptive-boxes/postproc_gpu/csv_out_data/humboldt.csv"  # .csv
 
 data = np.array(pd.read_csv(in_path, header=None))
 sep_value = 1           # it is a constant because adabox GPU returns partitions with this value. DONT CHANGE!
