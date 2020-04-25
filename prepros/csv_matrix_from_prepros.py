@@ -72,14 +72,14 @@ data_m = divs_i
 data_n = divs_j
 
 text_file = open(out_path, "w")
-text_file.write('%d\n%d' % (data_m, data_n))
+# text_file.write('%d\n%d' % (data_m, data_n))
 
 for i in range(data_m):
-    text_file.write('\n')
     for j in range(data_n):
         text_file.write('%d' % data_matrix[i][j])
         if j != (data_n - 1):
             text_file.write(',')
+    text_file.write('\n')
 
 text_file.close()
 
