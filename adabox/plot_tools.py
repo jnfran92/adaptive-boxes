@@ -70,7 +70,7 @@ def plot_rectangle_lines(rec_arg: Rectangle, sep_to_plot_arg, max_area_arg, ax):
     max_log = np.log2(max_n + 1)
     area_ratio = (max_n*(rec_arg.get_area()/max_area_arg))+1
     line_w = np.log2(area_ratio)/max_log
-    plt.plot(ps[:, 0], ps[:, 1], linewidth=0.3*line_w + 0.1, c='red')
+    plt.plot(ps[:, 0], ps[:, 1], linewidth=0.1*line_w + 0.05, c='red')
 
     rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color='yellow', lw=0)
     # rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color=next(cycol), lw=0)

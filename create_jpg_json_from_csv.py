@@ -34,4 +34,3 @@ plt.savefig(out_path + '_lines.jpg', dpi=4000)
 
 
 save_to_json(out_path + '.json', data, sep_value)
-
