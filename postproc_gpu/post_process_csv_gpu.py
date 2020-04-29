@@ -42,7 +42,7 @@ for s in summary:
 
 # Save in a csv file
 n_split_sep_value = 3
-error_val = 0.05
+error_val = 0.6
 y_units, x_units = get_xy_units(groups_details, sep_value, n_split_sep_value, error_val)
 
 # Creating units
