@@ -1,5 +1,9 @@
 # Adaptive-Boxes
+
+ [![Downloads](https://pepy.tech/badge/adaptive-boxes)](https://pepy.tech/project/adaptive-boxes) [![Downloads](https://pepy.tech/badge/adaptive-boxes/month)](https://pepy.tech/project/adaptive-boxes/month)
+
 Python Library for rectangular decomposition of 2D binary images.
+
 
 <img src="./hires_images/intro_image.png" alt="sample1">
 
