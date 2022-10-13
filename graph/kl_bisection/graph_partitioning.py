@@ -6,14 +6,14 @@ import pandas as pd
 from networkx.algorithms.community import kernighan_lin_bisection
 import numpy as np
 
-from lib.PartitionRectangle import PartitionRectangle
-from lib.plot_tools import plot_rectangles
+from graph.lib.PartitionRectangle import PartitionRectangle
+from graph.lib.plot_tools import plot_rectangles
 
 colors_list = list(colors._colors_full_map.values())
 
 plt.ion()
 
-base_folder = "/Users/kolibri/PycharmProjects/gard/partitions/partitions_data/humboldt"
+base_folder = "./graph/partitions_data/humboldt"
 
 summary_groups_data_path = base_folder + '/' + 'summary_groups.csv'
 x_units_path = base_folder + '/' + 'x_units.csv'
@@ -175,9 +175,10 @@ node_areas = nodes_df.to_dict()['area']
 node_positions = {node[0]: (node[1]['x1'] + abs(node[1]['x1'] - node[1]['x2'])/2.0, node[1]['y1'] + abs(node[1]['y1'] - node[1]['y2'])/2.0) for node in g.nodes(data=True)}
 
 
-# # Plotting
-# plt.figure(figsize=(8, 6))
-# nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=40.0, node_color='black')
+# Plotting
+plt.figure(figsize=(8, 6))
+nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=40.0, node_color='black')
+
 #
 # # Save in gephi file
 # nx.write_gexf(g, "/Users/Juan/django_projects/gard/partitions/gexf/humboldt.gexf")
@@ -221,7 +222,9 @@ nx.set_node_attributes(G, color_nodes_dict)
 node_color_map = [n[1]['color'] for n in G.nodes(data=True)]
 
 # printing
-nx.draw(G, node_color=node_color_map, with_labels=False, pos=node_positions, node_size=80.0)
+nx.draw_networkx_edges(G, node_positions, alpha=0.3, edge_color="m", width=)
+nx.draw_networkx_nodes(G, node_positions, node_color="#210070", alpha=0.9)
+# nx.draw(G, node_color=node_color_map, with_labels=False, pos=node_positions, node_size=80.0)
 
 # Creating Rectangles from Nodes (in this case: partition id matches with color code )
 recs = []
