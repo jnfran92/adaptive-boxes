@@ -1,3 +1,3 @@
 # Graph
 
-Here we process the partitions' data.
+Here we analyze the rectangular decomposition using Graphs.
