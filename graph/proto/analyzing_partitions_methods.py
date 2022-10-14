@@ -222,7 +222,7 @@ def plot_partitions(partitions_arg):
 
 
 # Recursive bisection -  First Run (resulting in 2 partitions)
-partitions = kernighan_lin_bisection(G, weight='Weight')
+partitions = kernighan_lin_bisection(G, weight='Weight', max_iter=1000)
 # Loop
 for i in range(0, 1):
     pss = []
