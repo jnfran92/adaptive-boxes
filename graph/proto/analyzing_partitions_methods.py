@@ -3,7 +3,7 @@ import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-from networkx.algorithms.community import kernighan_lin_bisection
+from networkx.algorithms.community import kernighan_lin_bisection, greedy_modularity_communities
 import numpy as np
 
 from graph.lib.PartitionRectangle import PartitionRectangle
@@ -179,11 +179,8 @@ node_positions = {node[0]: (node[1]['x1'] + abs(node[1]['x1'] - node[1]['x2'])/2
 plt.figure(figsize=(8, 6))
 nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=40.0, node_color='black')
 
-#
-# # Save in gephi file
-# nx.write_gexf(g, "/Users/Juan/django_projects/gard/partitions/gexf/humboldt.gexf")
 
-
+# KL-Algorithm
 # Graph Partitioning: Recursive Bisection
 G = g
 # info
@@ -192,60 +189,43 @@ print(G.edges)
 print(G.nodes(data=True))
 
 
+def plot_partitions(partitions_arg):
+    # Drawing
+    partition_list = []
+    partitions_tmp = partitions_arg
+    com_idx = 0
+    for com in partitions_tmp:
+        print(com)
+        print(com_idx)
+        partition_list.extend(list(map(lambda x: (x, {'color': colors_list[com_idx]}), com)))
+        com_idx += 1
+
+    # adding colors to dict
+    color_nodes_dict = dict(partition_list)
+    nx.set_node_attributes(G, color_nodes_dict)
+    node_color_map = [n[1]['color'] for n in G.nodes(data=True)]
+
+    # Creating Rectangles from Nodes (in this case: partition id matches with color code )
+    recs = []
+    for g_node_tmp in g.nodes.data(True):
+        values = g_node_tmp[1]
+        recs.append(
+            PartitionRectangle(values['x1'],
+                               values['x2'],
+                               values['y1'],
+                               values['y2'],
+                               values['color']
+                               )
+        )
+
+    plot_rectangles(recs)
+
+
 # Recursive bisection -  First Run (resulting in 2 partitions)
 partitions = kernighan_lin_bisection(G, weight='Weight')
+plot_partitions(partitions)
 
-# Loop
-for i in range(0, 1):
-    pss = []
-    for p in partitions:
-        ps_tmp = kernighan_lin_bisection(G.subgraph(list(p)), weight='Weight')
-        pss.extend(ps_tmp)
+# Modularity-based communities
+partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=10000)
+plot_partitions(partitions)
 
-    partitions = pss
-
-
-# Drawing
-partition_list = []
-partitions_tmp = partitions
-com_idx = 0
-for com in partitions_tmp:
-    print(com)
-    print(com_idx)
-    partition_list.extend(list(map(lambda x: (x, {'color': colors_list[com_idx]}), com)))
-    com_idx += 1
-
-
-# adding colors to dict
-color_nodes_dict = dict(partition_list)
-nx.set_node_attributes(G, color_nodes_dict)
-node_color_map = [n[1]['color'] for n in G.nodes(data=True)]
-
-# printing
-nx.draw_networkx_nodes(G, node_positions, node_color="#210070", alpha=0.9)
-# nx.draw(G, node_color=node_color_map, with_labels=False, pos=node_positions, node_size=80.0)
-
-# Creating Rectangles from Nodes (in this case: partition id matches with color code )
-recs = []
-for g_node_tmp in g.nodes.data(True):
-    values = g_node_tmp[1]
-    recs.append(
-        PartitionRectangle(values['x1'],
-                           values['x2'],
-                           values['y1'],
-                           values['y2'],
-                           values['color']
-                           )
-    )
-
-plot_rectangles(recs)
-
-
-## Save
-# nx.write_gexf(g, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/hall.gexf")
-
-# Save Partitions
-partitions_array = np.array(partitions)
-nx.write_gexf(g, "/Users/Juan/django_projects/gard/partitions/kl_bisection/output/hall/hall_2_partitions.gexf")
-# np.save("/Users/Juan/django_projects/gard/partitions/kl_bisection/output/humboldt/humboldt_kl_partitions_2.npy",
-#         partitions_array)
