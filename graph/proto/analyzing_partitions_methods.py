@@ -3,7 +3,7 @@ import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-from networkx.algorithms.community import kernighan_lin_bisection, greedy_modularity_communities
+from networkx.algorithms.community import kernighan_lin_bisection, greedy_modularity_communities, asyn_fluidc
 import numpy as np
 
 from graph.lib.PartitionRectangle import PartitionRectangle
@@ -223,9 +223,21 @@ def plot_partitions(partitions_arg):
 
 # Recursive bisection -  First Run (resulting in 2 partitions)
 partitions = kernighan_lin_bisection(G, weight='Weight')
+# Loop
+for i in range(0, 1):
+    pss = []
+    for p in partitions:
+        ps_tmp = kernighan_lin_bisection(G.subgraph(list(p)), weight='Weight')
+        pss.extend(ps_tmp)
+
+    partitions = pss
+
 plot_partitions(partitions)
 
-# Modularity-based communities
-partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=10000)
+# Modularity-based communities I: greedy_modularity_communities
+partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=1000000)
 plot_partitions(partitions)
 
+# Fluid Communities
+partitions = asyn_fluidc(G, k=4, max_iter=1000000)
+plot_partitions(partitions)
