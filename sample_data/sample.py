@@ -5,13 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Input Path
-in_path = './sample_data/humboldt_binary_matrix.csv'
+in_path = './sample_data/boston12.csv'
 
 # Load Demo data with columns [x_position y_position flag]
-data_2d = np.loadtxt(in_path, delimiter=",")
+binary_matrix = np.loadtxt(in_path, delimiter=",")
 
 
 # Plot demo data
-plt.scatter(data_2d[:, 0], data_2d[:, 1])
-plt.axis('scaled')
-
+plt.imshow(binary_matrix, cmap='Greys',  interpolation='nearest')
