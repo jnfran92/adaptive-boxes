@@ -222,7 +222,7 @@ def plot_partitions(partitions_arg):
 
 
 # Recursive bisection -  First Run (resulting in 2 partitions)
-partitions = kernighan_lin_bisection(G, weight='Weight', max_iter=1000)
+partitions = kernighan_lin_bisection(G, weight='Weight')
 # Loop
 for i in range(0, 1):
     pss = []
@@ -235,9 +235,71 @@ for i in range(0, 1):
 plot_partitions(partitions)
 
 # Modularity-based communities I: greedy_modularity_communities
-partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=1000000)
+partitions = greedy_modularity_communities(G, weight='Weight', best_n=3, resolution=1000000)
 plot_partitions(partitions)
 
 # Fluid Communities
-partitions = asyn_fluidc(G, k=4, max_iter=1000000)
+partitions = asyn_fluidc(G, k=5, max_iter=100)
 plot_partitions(partitions)
+
+
+# Get stats from partitions --------
+SCALE = 1
+# Partitions = Nodes
+nodes_data = []
+for g_node in G.nodes.data():
+    # print(g_node[1])
+    nodes_data.append(g_node[1])
+
+partitions_df = pd.DataFrame(nodes_data)
+partitions_df[['x1', 'x2', 'y1', 'y2', 'x', 'y']] = SCALE * partitions_df[['x1', 'x2', 'y1', 'y2', 'x', 'y']]
+# partitions_df[['x1', 'x2', 'y1', 'y2', 'x', 'y']] = int(SCALE) * partitions_df[['x1', 'x2', 'y1', 'y2', 'x', 'y']]
+partitions_df[['area']] = (SCALE * SCALE) * partitions_df[['area']]
+# partitions_df[['area']] = int(SCALE * SCALE) * partitions_df[['area']]
+
+partitions_df['dim_x'] = np.round(abs(partitions_df['x1'] - partitions_df['x2']))
+partitions_df['dim_y'] = np.round(abs(partitions_df['y1'] - partitions_df['y2']))
+partitions_df['dim_x_y_code'] = partitions_df['dim_x'].astype(str) + "_" + partitions_df['dim_y'].astype(str)
+partitions_df['device_group'] = list(map(lambda x: colors_list.index(x), partitions_df.color))
+
+partitions_df['gi'] = -1
+partitions_df['gj'] = -1
+
+# sort by area
+partitions_df = partitions_df.sort_values(by="area")
+
+pg_list = []
+device_groups = partitions_df.groupby('device_group')
+for idx, dg in device_groups:
+    # print(dg)
+    print(idx)
+
+    processing_groups = dg.groupby('dim_x_y_code')
+    # pg_list = []
+    pg_counter = 0
+    for idx2, pg in processing_groups:
+        # print(pg)
+        partitions_df.loc[pg.index, 'gi'] = pg_counter
+        partitions_df.loc[pg.index, 'gj'] = list(range(0, pg.shape[0]))
+        pg_list.append(
+            (pg_counter, pg.shape[0], pg.dim_y.iloc[0], pg.dim_x.iloc[0], idx)
+        )
+        pg_counter += 1
+
+# Summary group; n_group  n_partitions  num_div_y  num_div_x device_group labels
+summary_groups = pd.DataFrame(pg_list)
+summary_groups.columns = list(['n_group', 'n_partitions', 'num_div_y', 'num_div_x', 'device_group'])
+
+# Nodes Partitions Summary
+partitions_df_desc = partitions_df.groupby('device_group').describe()
+# Memory required
+total_area = sum(partitions_df.area)
+# PartitionGroupSize = (n_partitions * 6 * m * n * scale)
+# + (3 * m * n * scale) + (n*scale)^2 + (m*scale)^2 + (m * n * scale) = ~12 times
+elements_required = 12 * total_area
+size_bytes = elements_required * 8  # double
+size_mb = size_bytes / (1024 ** 2)
+print('Processing groups size: ' + str(size_mb) + ' Mb')
+print('Processing groups size: ' + str(size_mb / 1024) + ' Gb')
+
+
