@@ -2,10 +2,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-int square(int i) {
-	return i * i;
-}
-
 int get_bottom_distance(int idx_i_arg, int idx_j_arg, int n_arg, int lim, int *data_matrix_arg){
     int di =0;
     int temp_val = 0;
