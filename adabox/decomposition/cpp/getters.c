@@ -256,10 +256,4 @@ void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matr
     }
     coords[4 * coords_n + j] = pb;
     out[3] = pb;
-
-//    j = 0;
-//    int a = abs(coords[coords_n * 4 + 0] - coords[coords_n * 4 + 1]) + 1;
-//    int b = abs(coords[coords_n * 4 + 2] - coords[coords_n * 4 + 3]) + 1;
-//    int area = a * b;
-//    areas[b_i * b_n + b_j] = area;
 }
