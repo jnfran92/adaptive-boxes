@@ -223,7 +223,7 @@ void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matr
         pl = b;
     }
     coords[4 * coords_n + j] = pl;
-    out[b_i * b_n * 4 + (4 * b_j + j)] = pl;
+    out[0] = pl;
 
     j = 1;
     a = coords[0 * coords_n + 1];
@@ -233,7 +233,7 @@ void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matr
         pr = b;
     }
     coords[4 * coords_n + j] = pr;
-    out[b_i * b_n * 4 + (4 * b_j + j)] = pr;
+    out[1] = pr;
 
 
     j = 2;
@@ -244,7 +244,7 @@ void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matr
         pt = b;
     }
     coords[4 * coords_n + j] = pt;
-    out[b_i * b_n * 4 + (4 * b_j + j)] = pt;
+    out[2] = pt;
 
 
     j = 3;
@@ -255,7 +255,7 @@ void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matr
         pb = b;
     }
     coords[4 * coords_n + j] = pb;
-    out[b_i * b_n * 4 + (4 * b_j + j)] = pb;
+    out[3] = pb;
 
 //    j = 0;
 //    int a = abs(coords[coords_n * 4 + 0] - coords[coords_n * 4 + 1]) + 1;

@@ -24,27 +24,36 @@ plt.imshow(np.flip(data_matrix, axis=0), cmap='magma', interpolation='nearest')
 
 idx = 7
 idj = 12
+
 m = data_matrix.shape[0]
 n = data_matrix.shape[1]
-results1 = np.array([0, 0, 0, 0]).astype(np.intc)
-results2 = np.array([0, 0, 0, 0]).astype(np.intc)
-results3 = np.array([0, 0, 0, 0]).astype(np.intc)
-results4 = np.array([0, 0, 0, 0]).astype(np.intc)
+#
+# results1 = np.array([0, 0, 0, 0]).astype(np.intc)
+# results2 = np.array([0, 0, 0, 0]).astype(np.intc)
+# results3 = np.array([0, 0, 0, 0]).astype(np.intc)
+# results4 = np.array([0, 0, 0, 0]).astype(np.intc)
+#
+# c_int_p = ctypes.POINTER(ctypes.c_int)
+# data_matrix_ptr = data_matrix.ctypes.data_as(c_int_p)
+#
+# results1_ptr = results1.ctypes.data_as(c_int_p)
+# results2_ptr = results2.ctypes.data_as(c_int_p)
+# results3_ptr = results3.ctypes.data_as(c_int_p)
+# results4_ptr = results4.ctypes.data_as(c_int_p)
+#
+# getters.get_right_bottom_rectangle(idx, idj, m, n, data_matrix_ptr, results1_ptr)
+# getters.get_left_bottom_rectangle(idx, idj, m, n, data_matrix_ptr, results2_ptr)
+#
+# getters.get_right_top_rectangle(idx, idj, n, data_matrix_ptr, results3_ptr)
+# getters.get_left_top_rectangle(idx, idj, n, data_matrix_ptr, results4_ptr)
+
+out = np.array([0, 0, 0, 0]).astype(np.intc)
 
 c_int_p = ctypes.POINTER(ctypes.c_int)
+
 data_matrix_ptr = data_matrix.ctypes.data_as(c_int_p)
-
-results1_ptr = results1.ctypes.data_as(c_int_p)
-results2_ptr = results2.ctypes.data_as(c_int_p)
-results3_ptr = results3.ctypes.data_as(c_int_p)
-results4_ptr = results4.ctypes.data_as(c_int_p)
-
-getters.get_right_bottom_rectangle(idx, idj, m, n, data_matrix_ptr, results1_ptr)
-getters.get_left_bottom_rectangle(idx, idj, m, n, data_matrix_ptr, results2_ptr)
-
-getters.get_right_top_rectangle(idx, idj, n, data_matrix_ptr, results3_ptr)
-getters.get_left_top_rectangle(idx, idj, n, data_matrix_ptr, results4_ptr)
-
+out_ptr = out.ctypes.data_as(c_int_p)
+getters.find_largest_rectangle(idx, idj, m, n, data_matrix_ptr, out_ptr)
 
 
 def plot_rectangles_only_lines(recs_arg, sep_value_arg):
@@ -95,8 +104,8 @@ def plot_rectangle_lines(rec_arg: Rectangle, sep_to_plot_arg, max_area_arg, ax):
     ax.add_patch(rect)
 
 
-results = [results1, results2, results3, results4]
-recs = list(map(lambda rec: Rectangle(rec[0],rec[1], rec[2], rec[3]), results))
+results = [out]
+recs = list(map(lambda rec: Rectangle(rec[0], rec[1], rec[2], rec[3]), results))
 
 
 # Plot demo data
