@@ -1,5 +1,6 @@
 
 import ctypes
+import random
 # from ctypes import *
 from adabox import proc
 from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
@@ -10,7 +11,7 @@ from adabox.tools import load_from_json, Rectangle, save_to_json
 
 so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters.so"
 getters = ctypes.CDLL(so_file)
-
+c_int_p = ctypes.POINTER(ctypes.c_int)
 
 # Input Path
 in_path = './sample_data/squares.csv'
@@ -108,7 +109,45 @@ results = [out]
 recs = list(map(lambda rec: Rectangle(rec[0], rec[1], rec[2], rec[3]), results))
 
 
+
+# run adaptive boxes -----
+
+# set of possible points
+n_runs = 100
+
+out = np.array([0, 0, 0, 0]).astype(np.intc)
+
+# pointers
+data_matrix_ptr = data_matrix.ctypes.data_as(c_int_p)
+out_ptr = out.ctypes.data_as(c_int_p)
+
+# start
+#   search rectangle
+coords = np.argwhere(data_matrix == 1)
+outs = []
+for i in range(n_runs):
+    random_point = random.choices(coords)
+    idx = int(random_point[0][0])
+    idj = int(random_point[0][1])
+    getters.find_largest_rectangle(idx, idj, m, n, data_matrix_ptr, out_ptr)
+    outs.append(out)
+
+# remove it
+rec_to_remove = outs[0]
+x1=rec_to_remove[0]
+y1=rec_to_remove[1]
+x2=rec_to_remove[2]
+y2=rec_to_remove[3]
+data_matrix[x2:y2+1, x1:y1+1] = 0
+
+
+
+
+
+
 # Plot demo data
+results = [outs[0]]
+recs = list(map(lambda rec: Rectangle(rec[0], rec[1], rec[2], rec[3]), results))
 fig = plt.figure()
 plt.axis('off')
 ax = fig.add_subplot(111)
