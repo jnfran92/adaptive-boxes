@@ -107,6 +107,6 @@ ax = fig.add_subplot(111)
 plt.imshow(data_matrix, cmap='magma', interpolation='nearest')
 plot_rectangles_only_lines(recs, 1)
 
-coords = np.argwhere(np.flip(data_matrix, axis=0) == 1)
+coords = np.argwhere(data_matrix == 1)
 plt.scatter(coords[:, 1], coords[:, 0])
 plt.show()
