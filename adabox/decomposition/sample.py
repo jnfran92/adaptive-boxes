@@ -109,7 +109,6 @@ results = [out]
 recs = list(map(lambda rec: Rectangle(rec[0], rec[1], rec[2], rec[3]), results))
 
 
-
 # run adaptive boxes -----
 
 # set of possible points
@@ -134,11 +133,34 @@ for i in range(n_runs):
 
 # remove it
 rec_to_remove = outs[0]
-x1=rec_to_remove[0]
-y1=rec_to_remove[1]
-x2=rec_to_remove[2]
-y2=rec_to_remove[3]
-data_matrix[x2:y2+1, x1:y1+1] = 0
+x1 = rec_to_remove[0]
+y1 = rec_to_remove[1]
+x2 = rec_to_remove[2]
+y2 = rec_to_remove[3]
+data_matrix[x2:y2 + 1, x1:y1 + 1] = 0
+
+
+# search rectangle
+random_point = random.choices(coords)
+def find_a_rectangle(point, data_binary_matrix, rectangle_found):
+    c_int_p = ctypes.POINTER(ctypes.c_int)
+    data_matrix_ptr = data_binary_matrix.ctypes.data_as(c_int_p)
+    out_ptr = rectangle_found.ctypes.data_as(c_int_p)
+    idx_var = int(point[0][0])
+    idj_var = int(point[0][1])
+    m = data_binary_matrix.shape[0]
+    n = data_binary_matrix.shape[1]
+    getters.find_largest_rectangle(idx_var, idj_var, m, n, data_matrix_ptr, out_ptr)
+
+
+def remove_rectangle_from_matrix(rec_to_remove, data_matrix):
+    rec_to_remove = outs[0]
+    x1 = rec_to_remove[0]
+    y1 = rec_to_remove[1]
+    x2 = rec_to_remove[2]
+    y2 = rec_to_remove[3]
+    data_matrix[x2:y2 + 1, x1:y1 + 1] = 0
+
 
 
 
