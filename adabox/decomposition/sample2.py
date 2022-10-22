@@ -5,6 +5,9 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
+from adabox.plot_tools import plot_rectangles
+from adabox.tools import Rectangle
+
 
 def find_a_rectangle(point, data_binary_matrix, so_lib):
     c_int_p = ctypes.POINTER(ctypes.c_int)
@@ -44,12 +47,19 @@ plt.imshow(np.flip(data_matrix, axis=0), cmap='magma', interpolation='nearest')
 
 # search rectangle
 coords = np.argwhere(data_matrix == 1)
-random_point = random.choices(coords)
-rec_found = find_a_rectangle(random_point, data_matrix, getters_so_lib)
-remove_rectangle_from_matrix(rec_found, data_matrix)
+recs = []
+
+while coords.shape[0] != 0:
+    print("searching...")
+    random_point = random.choices(coords)
+    rec = find_a_rectangle(random_point, data_matrix, getters_so_lib)
+    remove_rectangle_from_matrix(rec, data_matrix)
+    coords = np.argwhere(data_matrix == 1)
+    recs.append(rec)
 
 
-
-plt.imshow(np.flip(data_matrix, axis=0), cmap='magma', interpolation='nearest')
+# Plotting
+rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), recs))
+plot_rectangles(rectangles_list, 1)
 
 
