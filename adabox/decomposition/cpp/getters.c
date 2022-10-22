@@ -168,7 +168,8 @@ void get_right_top_rectangle(int idx_i_arg, int idx_j_arg, long n_arg, int *data
     results[3] = y2_val;
 }
 
-void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matrix, int *out, int area) {
+void
+find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matrix, int *out, int *area, double *ab_ratio) {
 
     const int coords_m = 5;
     const int coords_n = 4;
@@ -260,5 +261,8 @@ void find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matr
     //  area
     int a_side = abs(coords[coords_n * 4 + 0] - coords[coords_n * 4 + 1]) + 1;
     int b_side = abs(coords[coords_n * 4 + 2] - coords[coords_n * 4 + 3]) + 1;
-    area = a_side * b_side;
+    area[0] = a_side * b_side;
+
+    // ab_ ratio
+    ab_ratio[0] = a_side / b_side;
 }
