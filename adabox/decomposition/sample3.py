@@ -15,14 +15,12 @@ def find_a_rectangle(point, data_binary_matrix, so_lib):
     out = np.array([0, 0, 0, 0]).astype(np.intc)
     out_ptr = out.ctypes.data_as(c_int_p)
 
-    rec_area = 0
     idx_var = int(point[0][0])
     idj_var = int(point[0][1])
     m = data_binary_matrix.shape[0]
     n = data_binary_matrix.shape[1]
-    so_lib.find_largest_rectangle(idx_var, idj_var, m, n, data_matrix_ptr, out_ptr, rec_area)
-    return out, rec_area
-
+    so_lib.find_largest_rectangle(idx_var, idj_var, m, n, data_matrix_ptr, out_ptr)
+    return out
 
 
 def remove_rectangle_from_matrix(rec_to_remove, data_binary_matrix):
@@ -33,7 +31,7 @@ def remove_rectangle_from_matrix(rec_to_remove, data_binary_matrix):
     data_binary_matrix[x2:y2 + 1, x1:y1 + 1] = 0
 
 
-so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters_complete.so"
+so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
@@ -50,7 +48,6 @@ data_matrix = data_matrix.astype(np.intc)
 # search rectangle
 coords = np.argwhere(data_matrix == 1)
 recs = []
-areas = []
 
 start = timer()
 while coords.shape[0] != 0:
@@ -61,14 +58,13 @@ while coords.shape[0] != 0:
     print("elapsed time random point " + str((end2 - start2)*1000) + " milli-seconds")
 
     start2 = timer()
-    rec, rec_area = find_a_rectangle(random_point, data_matrix, getters_so_lib)
+    rec = find_a_rectangle(random_point, data_matrix, getters_so_lib)
     remove_rectangle_from_matrix(rec, data_matrix)
     end2 = timer()
     print("elapsed time random find/remove " + str((end2 - start2)*1000) + " milli-seconds")
 
     coords = np.argwhere(data_matrix == 1)
     recs.append(rec)
-    areas.append(rec_area)
 end = timer()
 print("elapsed time " + str(end - start) + "seconds")
 
