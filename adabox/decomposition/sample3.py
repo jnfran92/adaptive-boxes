@@ -46,8 +46,16 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
     # conditions
     results_array_area = np.array(results)[:, 1]
     results_array_ab_side = np.array(results)[:, 2]
+    condition1 = np.logical_and(results_array_ab_side >= 0.6, results_array_ab_side <= 1.2)
+    condition1_index = np.where(condition1)
+    filtered_area = results_array_area[condition1_index]
 
-    result = results[results_array_area.argmax()]
+    if filtered_area.shape[0] != 0:
+        max_item_index = condition1_index[0][filtered_area.argmax()]
+        result = results[max_item_index]
+    else:
+        raise Exception("Rectangle not found")
+
     return result[0], result[1], result[2]
 
 
@@ -80,7 +88,13 @@ while coords.shape[0] != 0:
     print("elapsed time random point " + str((end2 - start2) * 1000) + " milli-seconds")
 
     start2 = timer()
-    rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)
+    try:
+        rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)
+    except Exception as e:
+        print("Error: Rectangle not found, passing")
+        print("")
+        continue
+
     remove_rectangle_from_matrix(rec, data_matrix)
     end2 = timer()
     print("elapsed time random find/remove " + str((end2 - start2) * 1000) + " milli-seconds")
