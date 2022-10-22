@@ -264,5 +264,5 @@ find_largest_rectangle(int idx_i, int idx_j, long m, long n, int *data_matrix, i
     area[0] = a_side * b_side;
 
     // ab_ ratio
-    ab_ratio[0] = a_side / b_side;
+    ab_ratio[0] = (double) ((double) a_side) / ((double) b_side);
 }
