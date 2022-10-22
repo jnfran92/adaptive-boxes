@@ -1,7 +1,7 @@
 
 import ctypes
 import random
-
+from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -49,13 +49,19 @@ plt.imshow(np.flip(data_matrix, axis=0), cmap='magma', interpolation='nearest')
 coords = np.argwhere(data_matrix == 1)
 recs = []
 
+start = timer()
 while coords.shape[0] != 0:
     print("searching...")
+    start2 = timer()
     random_point = random.choices(coords)
+    end2 = timer()
+
     rec = find_a_rectangle(random_point, data_matrix, getters_so_lib)
     remove_rectangle_from_matrix(rec, data_matrix)
     coords = np.argwhere(data_matrix == 1)
     recs.append(rec)
+end = timer()
+print("elapsed time" + str(end - start) + "seconds")
 
 
 # Plotting
