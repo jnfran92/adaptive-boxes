@@ -84,7 +84,7 @@ so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cp
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = './sample_data/humboldt_binary_matrix.csv'
+in_path = '/Users/kolibri/PycharmProjects/adaptive-boxes/sample_data/humboldt_binary_matrix.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
@@ -144,4 +144,4 @@ print("elapsed time " + str(end - start) + "seconds")
 
 # Plotting
 rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), recs))
-plot_rectangles_only_lines(rectangles_list, 1)
+plot_rectangles(rectangles_list, 1)
