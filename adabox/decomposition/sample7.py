@@ -3,6 +3,7 @@ import random
 from timeit import default_timer as timer
 import numpy as np
 
+
 from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 from adabox.tools import Rectangle
 
@@ -103,16 +104,14 @@ coords = np.argwhere(data_matrix == 1)
 recs = []
 areas = []
 ab_ratios = []
-
+start = timer()
 while coords.shape[0] != 0:
 
     n_searches = 1000
     random_points = random.choices(coords, k=n_searches)
 
-
     rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)
     remove_rectangle_from_matrix(rec, data_matrix)
-
 
     coords = np.argwhere(data_matrix == 1)
 
@@ -128,7 +127,8 @@ while coords.shape[0] != 0:
         areas.append(rec_area)
         ab_ratios.append(ab_ratio)
 
-
+end = timer()
+print("elapsed time " + str(end - start) + "seconds")
 # Plotting
 rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), recs))
 plot_rectangles(rectangles_list, 1)
