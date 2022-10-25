@@ -59,7 +59,7 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
     return result[0], result[1], result[2]
 
 
-so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters_completed.so"
+so_file = "/adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path

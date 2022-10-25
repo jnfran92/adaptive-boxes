@@ -3,11 +3,11 @@ import random
 from timeit import default_timer as timer
 import numpy as np
 
-from adabox.plot_tools import plot_rectangles
+from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 from adabox.tools import Rectangle
 
 
-def slice_rectangle(rec_to_slice, slices):
+def slice_rectangle(rec_to_slice, slices_arg):
     a = rec_to_slice[1] - rec_to_slice[0]
     b = rec_to_slice[3] - rec_to_slice[2]
     if a > b:
@@ -19,10 +19,10 @@ def slice_rectangle(rec_to_slice, slices):
         min_coord = 2
         max_coord = 3
 
-    sep = int((side / slices))
+    sep = int((side / slices_arg))
     reference = rec_to_slice[min_coord]
     sliced_recs = []
-    for i in range(slices - 1):
+    for i in range(slices_arg - 1):
         nr = rec_to_slice.copy()
         nr[min_coord] = reference
         reference = reference + sep
@@ -36,6 +36,7 @@ def slice_rectangle(rec_to_slice, slices):
     sliced_areas = list(map(lambda r: ((r[1] - r[0]) * (r[3] - r[2])), sliced_recs))
     sliced_ab_ratio = list(map(lambda r: ((r[1] - r[0]) / (r[3] - r[2])), sliced_recs))
     return sliced_recs, sliced_areas, sliced_ab_ratio
+
 
 def find_a_rectangle(point, data_binary_matrix, so_lib):
     c_int_p = ctypes.POINTER(ctypes.c_int)
@@ -79,18 +80,18 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
     return result[0], result[1], result[2]
 
 
-so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters_completed.so"
+so_file = "/adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = './sample_data/boston12.csv'
+in_path = '/sample_data/humboldt_binary_matrix.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 8
+n_gpus = 16
 max_area = total_area / n_gpus
 
 # Plot demo data
@@ -106,7 +107,7 @@ ab_ratios = []
 start = timer()
 while coords.shape[0] != 0:
     start2 = timer()
-    n_searches = 100
+    n_searches = 1000
     random_points = random.choices(coords, k=n_searches)
     end2 = timer()
     print("elapsed time random point " + str((end2 - start2) * 1000) + " milli-seconds")
@@ -139,129 +140,6 @@ while coords.shape[0] != 0:
     print("")
 end = timer()
 print("elapsed time " + str(end - start) + "seconds")
-
-# Casting Rectangles
-areas_condition = np.array(areas).flatten() >= max_area
-not_valid_recs_indexes = np.where(areas_condition)
-
-# largest rectangles
-idx = int(not_valid_recs_indexes[0])
-r = recs[idx]
-slices = int(np.ceil(areas[idx] / max_area)[0])
-
-a = r[1] - r[0]
-b = r[3] - r[2]
-
-# for a[x2-x1]
-sep = int((a / slices))
-reference = r[0]
-sliced_recs = []
-for i in range(slices - 1):
-    nr = r.copy()
-    nr[0] = reference
-    reference = reference + sep
-    nr[1] = reference
-    sliced_recs.append(nr)
-
-nr = r.copy()
-nr[0] = reference
-nr[1] = r[1]
-sliced_recs.append(nr)
-
-# for b[y2-xy1]
-sep = int((b / slices))
-reference = r[2]
-sliced_recs = []
-for i in range(slices - 1):
-    nr = r.copy()
-    nr[2] = reference
-    reference = reference + sep
-    nr[3] = reference
-    sliced_recs.append(nr)
-
-nr = r.copy()
-nr[2] = reference
-nr[3] = r[3]
-sliced_recs.append(nr)
-
-# for all ----- ---- ---
-idx = 0
-r = recs[idx]
-slices_out = int(np.ceil(areas[idx] / max_area)[0])
-
-
-rec_to_slice = r
-slices = slices_out
-
-a = rec_to_slice[1] - rec_to_slice[0]
-b = rec_to_slice[3] - rec_to_slice[2]
-if a > b:
-    side = a
-    min_coord = 0
-    max_coord = 1
-else:
-    side = b
-    min_coord = 2
-    max_coord = 3
-
-sep = int((side / slices))
-reference = rec_to_slice[min_coord]
-sliced_recs = []
-for i in range(slices - 1):
-    nr = rec_to_slice.copy()
-    nr[min_coord] = reference
-    reference = reference + sep
-    nr[max_coord] = reference
-    sliced_recs.append(nr)
-
-nr = rec_to_slice.copy()
-nr[min_coord] = reference
-nr[max_coord] = rec_to_slice[max_coord]
-sliced_recs.append(nr)
-
-sliced_areas = list(map(lambda r: ((r[1] - r[0]) * (r[3] - r[2])), sliced_recs))
-sliced_ab_ratio = list(map(lambda r: ((r[1] - r[0]) / (r[3] - r[2])), sliced_recs))
-
-
-def slice_rectangle(rec_to_slice, slices):
-    a = rec_to_slice[1] - rec_to_slice[0]
-    b = rec_to_slice[3] - rec_to_slice[2]
-    if a > b:
-        side = a
-        min_coord = 0
-        max_coord = 1
-    else:
-        side = b
-        min_coord = 2
-        max_coord = 3
-
-    sep = int((side / slices))
-    reference = rec_to_slice[min_coord]
-    sliced_recs = []
-    for i in range(slices - 1):
-        nr = rec_to_slice.copy()
-        nr[min_coord] = reference
-        reference = reference + sep
-        nr[max_coord] = reference
-        sliced_recs.append(nr)
-
-    nr = rec_to_slice.copy()
-    nr[min_coord] = reference
-    nr[max_coord] = rec_to_slice[max_coord]
-    sliced_recs.append(nr)
-    sliced_areas = list(map(lambda r: ((r[1] - r[0]) * (r[3] - r[2])), sliced_recs))
-    sliced_ab_ratio = list(map(lambda r: ((r[1] - r[0]) / (r[3] - r[2])), sliced_recs))
-    return sliced_recs, sliced_areas, sliced_ab_ratio
-
-
-# Plotting
-rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), [r]))
-rectangles_list2 = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), sliced_recs))
-plot_rectangles(rectangles_list, 1)
-plot_rectangles(rectangles_list2, 1)
-
-
-
 
 
 # Plotting

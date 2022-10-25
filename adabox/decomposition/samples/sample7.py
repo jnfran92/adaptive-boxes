@@ -2,7 +2,7 @@ import ctypes
 import random
 from timeit import default_timer as timer
 import numpy as np
-import asyncio
+
 
 from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 from adabox.tools import Rectangle
@@ -39,7 +39,7 @@ def slice_rectangle(rec_to_slice, slices_arg):
     return sliced_recs, sliced_areas, sliced_ab_ratio
 
 
-async def find_a_rectangle(point, data_binary_matrix, so_lib):
+def find_a_rectangle(point, data_binary_matrix, so_lib):
     c_int_p = ctypes.POINTER(ctypes.c_int)
     c_double_p = ctypes.POINTER(ctypes.c_double)
 
@@ -69,19 +69,11 @@ def remove_rectangle_from_matrix(rec_to_remove, data_binary_matrix):
     data_binary_matrix[x2:y2 + 1, x1:y1 + 1] = 0
 
 
-async def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_arg):
-    # results = []
-    # for rp in random_points_arg:
-    #     rec_out, rec_area_out, ab_ratio_out = find_a_rectangle(rp, data_matrix_arg, lib_arg)
-    #     results.append([rec_out, rec_area_out, ab_ratio_out])
-
-    coroutines = list(
-        map(
-            lambda rp: (find_a_rectangle(rp, data_matrix_arg, lib_arg)),
-            random_points_arg
-        )
-    )
-    results = await asyncio.gather(*coroutines)
+def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_arg):
+    results = []
+    for rp in random_points_arg:
+        rec_out, rec_area_out, ab_ratio_out = find_a_rectangle(rp, data_matrix_arg, lib_arg)
+        results.append([rec_out, rec_area_out, ab_ratio_out])
 
     # conditions
     results_array_area = np.array(results)[:, 1]
@@ -89,11 +81,11 @@ async def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg
     return result[0], result[1], result[2]
 
 
-so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters_completed.so"
+so_file = "/adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = '/Users/kolibri/PycharmProjects/adaptive-boxes/sample_data/humboldt_binary_matrix.csv'
+in_path = '/sample_data/humboldt_binary_matrix.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
@@ -118,9 +110,7 @@ while coords.shape[0] != 0:
     n_searches = 1000
     random_points = random.choices(coords, k=n_searches)
 
-    rec, rec_area, ab_ratio = asyncio.run(
-        find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)
-    )
+    rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)
     remove_rectangle_from_matrix(rec, data_matrix)
 
     coords = np.argwhere(data_matrix == 1)

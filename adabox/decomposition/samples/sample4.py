@@ -3,40 +3,8 @@ import random
 from timeit import default_timer as timer
 import numpy as np
 
-
-from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
+from adabox.plot_tools import plot_rectangles
 from adabox.tools import Rectangle
-
-
-def slice_rectangle(rec_to_slice, slices_arg):
-    a = rec_to_slice[1] - rec_to_slice[0]
-    b = rec_to_slice[3] - rec_to_slice[2]
-    if a > b:
-        side = a
-        min_coord = 0
-        max_coord = 1
-    else:
-        side = b
-        min_coord = 2
-        max_coord = 3
-
-    sep = int((side / slices_arg))
-    reference = rec_to_slice[min_coord]
-    sliced_recs = []
-    for i in range(slices_arg - 1):
-        nr = rec_to_slice.copy()
-        nr[min_coord] = reference
-        reference = reference + sep
-        nr[max_coord] = reference
-        sliced_recs.append(nr)
-
-    nr = rec_to_slice.copy()
-    nr[min_coord] = reference
-    nr[max_coord] = rec_to_slice[max_coord]
-    sliced_recs.append(nr)
-    sliced_areas = list(map(lambda r: ((r[1] - r[0]) * (r[3] - r[2])), sliced_recs))
-    sliced_ab_ratio = list(map(lambda r: ((r[1] - r[0]) / (r[3] - r[2])), sliced_recs))
-    return sliced_recs, sliced_areas, sliced_ab_ratio
 
 
 def find_a_rectangle(point, data_binary_matrix, so_lib):
@@ -69,31 +37,37 @@ def remove_rectangle_from_matrix(rec_to_remove, data_binary_matrix):
     data_binary_matrix[x2:y2 + 1, x1:y1 + 1] = 0
 
 
-def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_arg):
+def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_arg, ab_range):
     results = []
     for rp in random_points_arg:
-        rec_out, rec_area_out, ab_ratio_out = find_a_rectangle(rp, data_matrix_arg, lib_arg)
-        results.append([rec_out, rec_area_out, ab_ratio_out])
+        rec, rec_area, ab_ratio = find_a_rectangle(rp, data_matrix_arg, lib_arg)
+        results.append([rec, rec_area, ab_ratio])
 
     # conditions
     results_array_area = np.array(results)[:, 1]
-    result = results[results_array_area.argmax()]
+    results_array_ab_side = np.array(results)[:, 2]
+    condition1 = np.logical_and(results_array_ab_side >= ab_range[0], results_array_ab_side <= ab_range[1])
+    condition1_index = np.where(condition1)
+    filtered_area = results_array_area[condition1_index]
+
+    if filtered_area.shape[0] != 0:
+        max_item_index = condition1_index[0][filtered_area.argmax()]
+        result = results[max_item_index]
+    else:
+        raise Exception("Rectangle not found")
+
     return result[0], result[1], result[2]
 
 
-so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters_completed.so"
+so_file = "/adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = '/Users/kolibri/PycharmProjects/adaptive-boxes/sample_data/humboldt_binary_matrix.csv'
+in_path = './sample_data/boston12.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
-
-total_area = data_matrix.sum()
-n_gpus = 16
-max_area = total_area / n_gpus
 
 # Plot demo data
 # plt.imshow(np.flip(data_matrix, axis=0), cmap='magma', interpolation='nearest')
@@ -104,31 +78,45 @@ coords = np.argwhere(data_matrix == 1)
 recs = []
 areas = []
 ab_ratios = []
+
+a = 0.9
+b = 1.1
+ab_range = [0.9, 1.1]
+
 start = timer()
 while coords.shape[0] != 0:
-
-    n_searches = 1000
+    start2 = timer()
+    n_searches = 100
     random_points = random.choices(coords, k=n_searches)
+    end2 = timer()
+    print("elapsed time random point " + str((end2 - start2) * 1000) + " milli-seconds")
 
-    rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)
+    start2 = timer()
+    try:
+        rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib,
+                                                                      ab_range)
+    except Exception as e:
+        ab_range[0] -= 0.01
+        ab_range[1] += 0.01
+        print("Error: Rectangle not found, passing..." + str(ab_range))
+        print("")
+        continue
+
     remove_rectangle_from_matrix(rec, data_matrix)
+    end2 = timer()
+    print("elapsed time random find/remove " + str((end2 - start2) * 1000) + " milli-seconds")
 
+    start2 = timer()
     coords = np.argwhere(data_matrix == 1)
-
-    if rec_area[0] >= max_area:
-        slices = int(np.ceil(rec_area / max_area)[0])
-        s_recs, s_areas, s_ab_ratios = slice_rectangle(rec, slices)
-
-        recs.extend(s_recs)
-        areas.extend(s_areas)
-        ab_ratios.extend(s_ab_ratios)
-    else:
-        recs.append(rec)
-        areas.append(rec_area)
-        ab_ratios.append(ab_ratio)
-
+    recs.append(rec)
+    areas.append(rec_area)
+    ab_ratios.append(ab_ratio)
+    end2 = timer()
+    print("elapsed time random coords and appends " + str((end2 - start2) * 1000) + " milli-seconds")
+    print("")
 end = timer()
 print("elapsed time " + str(end - start) + "seconds")
+
 # Plotting
 rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), recs))
 plot_rectangles(rectangles_list, 1)

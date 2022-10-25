@@ -9,7 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from adabox.tools import load_from_json, Rectangle, save_to_json
 
-so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters.so"
+so_file = "/adabox/decomposition/cpp/getters.so"
 getters = ctypes.CDLL(so_file)
 c_int_p = ctypes.POINTER(ctypes.c_int)
 
