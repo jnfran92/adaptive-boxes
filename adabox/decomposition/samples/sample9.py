@@ -3,7 +3,6 @@ import random
 from timeit import default_timer as timer
 import numpy as np
 
-
 from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 from adabox.tools import Rectangle
 
@@ -143,4 +142,5 @@ for x in range(len(best_set)):
     array_to_save[x, 2] = best_set[x].y1
     array_to_save[x, 3] = best_set[x].y2
 
-np.savetxt('train_df.txt', train_df, fmt='%s')
+np.savetxt('/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/decomposition.csv',
+           np.array(recs), fmt='%s', delimiter=',')
