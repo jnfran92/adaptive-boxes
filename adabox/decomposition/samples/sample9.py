@@ -25,8 +25,8 @@ def slice_rectangle(rec_to_slice, slices_arg):
     for i in range(slices_arg - 1):
         nr = rec_to_slice.copy()
         nr[min_coord] = reference
+        nr[max_coord] = reference + sep - 1
         reference = reference + sep
-        nr[max_coord] = reference
         sliced_recs.append(nr)
 
     nr = rec_to_slice.copy()
@@ -80,18 +80,18 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
     return result[0], result[1], result[2]
 
 
-so_file = "/adabox/decomposition/cpp/getters_completed.so"
+so_file = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = '/sample_data/humboldt_binary_matrix.csv'
+in_path = '/Users/kolibri/PycharmProjects/adaptive-boxes/sample_data/humboldt_binary_matrix.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 16
+n_gpus = 8
 max_area = total_area / n_gpus
 
 # Plot demo data
@@ -106,7 +106,7 @@ ab_ratios = []
 start = timer()
 while coords.shape[0] != 0:
 
-    n_searches = 1000
+    n_searches = 100
     random_points = random.choices(coords, k=n_searches)
 
     rec, rec_area, ab_ratio = find_rectangles_and_filter_the_best(random_points, data_matrix, getters_so_lib)

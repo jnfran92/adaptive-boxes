@@ -13,7 +13,7 @@ colors_list = list(colors._colors_full_map.values())
 
 plt.ion()
 
-base_folder = "./graph/partitions_data/humboldt"
+base_folder = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/postdata"
 
 summary_groups_data_path = base_folder + '/' + 'summary_groups.csv'
 x_units_path = base_folder + '/' + 'x_units.csv'
@@ -177,7 +177,7 @@ node_positions = {node[0]: (node[1]['x1'] + abs(node[1]['x1'] - node[1]['x2'])/2
 
 # Plotting
 plt.figure(figsize=(8, 6))
-nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=40.0, node_color='black')
+nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=5.0, node_color='black')
 
 
 # KL-Algorithm
@@ -235,7 +235,7 @@ for i in range(0, 1):
 plot_partitions(partitions)
 
 # Modularity-based communities I: greedy_modularity_communities
-partitions = greedy_modularity_communities(G, weight='Weight', best_n=3, resolution=1000000)
+partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=1000000)
 plot_partitions(partitions)
 
 # Fluid Communities

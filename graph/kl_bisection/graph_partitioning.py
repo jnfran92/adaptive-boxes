@@ -13,7 +13,7 @@ colors_list = list(colors._colors_full_map.values())
 
 plt.ion()
 
-base_folder = "./graph/partitions_data/humboldt"
+base_folder = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/postdata"
 
 summary_groups_data_path = base_folder + '/' + 'summary_groups.csv'
 x_units_path = base_folder + '/' + 'x_units.csv'
@@ -222,7 +222,7 @@ nx.set_node_attributes(G, color_nodes_dict)
 node_color_map = [n[1]['color'] for n in G.nodes(data=True)]
 
 # printing
-nx.draw_networkx_nodes(G, node_positions, node_color="#210070", alpha=0.9)
+# nx.draw_networkx_nodes(G, node_positions, node_color="#210070", alpha=0.9)
 # nx.draw(G, node_color=node_color_map, with_labels=False, pos=node_positions, node_size=80.0)
 
 # Creating Rectangles from Nodes (in this case: partition id matches with color code )
