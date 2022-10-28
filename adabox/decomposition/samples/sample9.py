@@ -91,7 +91,7 @@ data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 8
+n_gpus = 16
 max_area = total_area / n_gpus
 
 # Plot demo data

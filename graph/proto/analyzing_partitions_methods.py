@@ -223,6 +223,12 @@ def plot_partitions(partitions_arg):
 
 # Recursive bisection -  First Run (resulting in 2 partitions)
 partitions = kernighan_lin_bisection(G, weight='Weight')
+plot_partitions(partitions)
+
+SG1 = G.subgraph(list(partitions[0]))
+sub_partitions_1 = kernighan_lin_bisection(SG1, weight='Weight')
+plot_partitions(sub_partitions_1)
+
 # Loop
 for i in range(0, 1):
     pss = []
@@ -234,12 +240,30 @@ for i in range(0, 1):
 
 plot_partitions(partitions)
 
+
+partitions = kernighan_lin_bisection(G)
+# Loop
+for i in range(0, 1):
+    pss = []
+    for p in partitions:
+        ps_tmp = kernighan_lin_bisection(G.subgraph(list(p)))
+        pss.extend(ps_tmp)
+
+    partitions = pss
+
+plot_partitions(partitions)
+
+
 # Modularity-based communities I: greedy_modularity_communities
-partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=1000000)
+partitions = greedy_modularity_communities(G, weight='Weight', best_n=2, resolution=1000000)
+plot_partitions(partitions)
+
+
+partitions = greedy_modularity_communities(G, best_n=8, resolution=1000000000000000000000)
 plot_partitions(partitions)
 
 # Fluid Communities
-partitions = asyn_fluidc(G, k=5, max_iter=100)
+partitions = asyn_fluidc(G, k=8, max_iter=100)
 plot_partitions(partitions)
 
 
