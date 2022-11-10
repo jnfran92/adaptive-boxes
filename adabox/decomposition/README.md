@@ -7,7 +7,7 @@ C/Python Code for decomposition.
 
  On `cpp` folder:
  
-     cc -fPIC -shared -o getters.so getters.c
+     cc -fPIC -shared -o getters_completed.so getters.c
 
 ## Sample
 

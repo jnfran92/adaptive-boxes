@@ -128,6 +128,8 @@ while coords.shape[0] != 0:
 
 end = timer()
 print("elapsed time " + str(end - start) + "seconds")
+
+
 # Plotting
 rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), recs))
 plot_rectangles(rectangles_list, 1)
