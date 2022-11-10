@@ -133,6 +133,7 @@ print("elapsed time " + str(end - start) + "seconds")
 # Plotting
 rectangles_list = list(map(lambda x: Rectangle(x[0], x[1], x[2], x[3]), recs))
 plot_rectangles(rectangles_list, 1)
+plot_rectangles_only_lines(rectangles_list, 1)
 
 # Export data
 best_set = rectangles_list

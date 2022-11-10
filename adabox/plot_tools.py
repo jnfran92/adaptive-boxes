@@ -78,7 +78,7 @@ def plot_rectangle_lines(rec_arg: Rectangle, sep_to_plot_arg, max_area_arg, ax):
     # plt.plot(ps[:, 0], ps[:, 1], linewidth=0.1*line_w + 0.05, c='red')
     plt.plot(ps[:, 0], ps[:, 1], linewidth=0.05, c='red')
 
-    rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color='yellow', lw=0)
+    rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color='black', lw=0)
     # rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color=next(cycol), lw=0)
     # rect = matplotlib.patches.Rectangle((p1[0], p1[1]), p3[0] - p1[0], p2[1] - p1[1], color=np.random.rand(3,), lw=0)
     ax.add_patch(rect)
