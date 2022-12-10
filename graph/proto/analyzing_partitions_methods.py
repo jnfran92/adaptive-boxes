@@ -1,4 +1,7 @@
 
+import sys; print('Python %s on %s' % (sys.version, sys.platform))
+sys.path.extend(['/Users/kolibri/PycharmProjects/adaptive-boxes'])
+
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -255,7 +258,7 @@ plot_partitions(partitions)
 
 
 # Modularity-based communities I: greedy_modularity_communities
-partitions = greedy_modularity_communities(G, weight='Weight', best_n=2, resolution=1000000)
+partitions = greedy_modularity_communities(G, weight='Weight', best_n=4, resolution=1000000)
 plot_partitions(partitions)
 
 
