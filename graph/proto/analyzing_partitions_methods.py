@@ -1,7 +1,3 @@
-
-import sys; print('Python %s on %s' % (sys.version, sys.platform))
-sys.path.extend(['/Users/kolibri/PycharmProjects/adaptive-boxes'])
-
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
