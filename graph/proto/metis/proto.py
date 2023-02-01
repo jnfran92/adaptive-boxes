@@ -1,5 +1,8 @@
+import matplotlib.colors as colors
+import matplotlib.pyplot as plt
 import networkx as nx
 import metis
+import numpy as np
 # G = metis.example_networkx()
 
 G = nx.Graph()
@@ -18,3 +21,11 @@ colors = ['red','blue','green']
 for i, p in enumerate(parts):
     G.node[i]['color'] = colors[p]
 
+
+# Plotting
+plt.figure(figsize=(8, 6))
+nx.draw(G, node_size=5.0, node_color='black')
+
+
+
+G = nx.from_numpy_matrix(np.int32(A))
