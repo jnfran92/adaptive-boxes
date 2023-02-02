@@ -110,7 +110,7 @@ g = nx.Graph()
 
 # Add edges attributes
 for i, tmp_row in edges_df.iterrows():
-    g.add_edge(tmp_row[0], tmp_row[1], weight=tmp_row[2], attr_dict=tmp_row[2:].to_dict())
+    g.add_edge(tmp_row[0], tmp_row[1], weight=int(tmp_row[2]), attr_dict=tmp_row[2:].to_dict())
 
 n_total_nodes = g.number_of_nodes()
 global_keys_no_duplicates = list(g.nodes.keys())
@@ -148,7 +148,8 @@ nodes_df.columns = ['code', 'area', 'x1', 'x2', 'y1', 'y2', 'x', 'y']
 nodes_df = nodes_df.set_index('code')
 
 # Setting Areas
-nx.set_node_attributes(g, nodes_df.transpose().to_dict())
+# nx.set_node_attributes(g, nodes_df.transpose().to_dict())
+nx.set_node_attributes(g, nodes_df.to_dict('index'))
 
 print(g.number_of_nodes())
 print(g.number_of_edges())
@@ -212,7 +213,7 @@ def plot_partitions(partitions_arg):
 G.graph['edge_weight_attr'] = 'weight'
 G.graph['node_weight_attr'] = 'area'
 
-n_parts = 3
+n_parts = 8
 (edgecuts, parts) = metis.part_graph(G, n_parts)
 
 # get partitions
