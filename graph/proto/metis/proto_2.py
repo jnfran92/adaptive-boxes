@@ -213,7 +213,7 @@ def plot_partitions(partitions_arg):
 G.graph['edge_weight_attr'] = 'weight'
 G.graph['node_weight_attr'] = 'area'
 
-n_parts = 8
+n_parts = 7
 (edgecuts, parts) = metis.part_graph(G, n_parts)
 
 # get partitions
