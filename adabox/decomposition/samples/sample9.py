@@ -75,7 +75,7 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
         results.append([rec_out, rec_area_out, ab_ratio_out])
 
     # conditions
-    results_array_area = np.array(results)[:, 1]
+    results_array_area = np.array(results, dtype=object)[:, 1]
     result = results[results_array_area.argmax()]
     return result[0], result[1], result[2]
 
