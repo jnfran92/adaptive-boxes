@@ -9,7 +9,8 @@ import metis
 from graph.lib.PartitionRectangle import PartitionRectangle
 from graph.lib.plot_tools import plot_rectangles
 
-colors_list = list(colors._colors_full_map.values())
+# colors_list = list(colors._colors_full_map.values())
+colors_list = list(colors.CSS4_COLORS .values())
 
 plt.ion()
 

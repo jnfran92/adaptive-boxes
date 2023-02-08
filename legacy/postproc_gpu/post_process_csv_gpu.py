@@ -12,7 +12,7 @@ from legacy.postproc_gpu.tools import create_groups, get_xy_units
 
 colors_list = list(colors._colors_full_map.values())
 
-in_path = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/decomposition2.csv"  # .csv
+in_path = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/decomposition_n_20.csv"  # .csv
 out_path = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/postdata"  # without extension
 
 data = np.array(pd.read_csv(in_path, header=None))
