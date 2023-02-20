@@ -8,7 +8,7 @@ Current decomposition process (Check [complete](complete)):
 3. [group_intf_details_to_gexf_partitioned.py](complete%2Fgroup_intf_details_to_gexf_partitioned.py)
 4. [gexf_partitioned_to_gpu_device_global_data.py](complete%2Fgexf_partitioned_to_gpu_device_global_data.py)
 
-Summary of the decomposition process legacy:
+Summary of the decomposition process (moved to legacy):
 - Decompose binary matrix into list of rectangles: [sample9.py](adabox%2Fdecomposition%2Fsamples%2Fsample9.py)
 - List of Rectangles to group/interface details(summary_groups, x_units, y_units, group_details): [post_process_csv_gpu.py](legacy%2Fpostproc_gpu%2Fpost_process_csv_gpu.py)
 - Group/interface details to GEFX file with partitions using Metis: [create_partitions_with_metis.py](graph%2Fproto%2Fmetis%2Fcreate_partitions_with_metis.py)
