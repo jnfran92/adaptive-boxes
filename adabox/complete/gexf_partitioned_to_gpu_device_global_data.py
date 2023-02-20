@@ -24,8 +24,8 @@ def delete_folder(path_tmp_arg):
 
 
 # Init - Load GEXF File
-data_path = "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/3_partitions.gexf"
-out_path_base = "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result"
+data_path = "/adabox/complete/result/3_partitions.gexf"
+out_path_base = "/adabox/complete/result"
 model_name = "4_gpu_device_global_data"
 # SCALE: IMPORTANT MUST BE INT
 SCALE = 10/3

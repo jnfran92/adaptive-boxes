@@ -229,4 +229,4 @@ for i in range(n_parts):
 plot_partitions(partitions)
 
 
-nx.write_gexf(G, "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/3_partitions.gexf")
+nx.write_gexf(G, "/adabox/complete/result/3_partitions.gexf")
