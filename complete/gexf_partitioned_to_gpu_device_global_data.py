@@ -24,8 +24,9 @@ def delete_folder(path_tmp_arg):
 
 
 # Init - Load GEXF File
-data_path = "/Users/Juan/django_projects/gard/partitions/kl_bisection/output/humboldt/humboldt_kl_partitions_2.gexf"
-model_name = "hum_10_3"
+data_path = "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/3_partitions.gexf"
+out_path_base = "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result"
+model_name = "4_gpu_device_global_data"
 # SCALE: IMPORTANT MUST BE INT
 SCALE = 10/3
 
@@ -35,7 +36,7 @@ G = nx.read_gexf(data_path)
 # Partitions = Nodes
 nodes_data = []
 for g_node in G.nodes.data():
-    # print(g_node[1])
+    print("node")
     nodes_data.append(g_node[1])
 
 partitions_df = pd.DataFrame(nodes_data)
@@ -226,8 +227,6 @@ print(intf_df.groupby('unit_type').get_group(0).interface_qty.sum())
 print(intf_df.groupby('unit_type').get_group(1).interface_qty.sum())
 
 # Export results ---  ---  ---  ---  ---  ---  ---  ---  ---  ---
-
-out_path_base = "/Users/Juan/django_projects/gard/partitions/kl_bisection/post_proc/results"
 
 tmp_path = out_path_base + "/" + model_name
 # Remove/Create previous data

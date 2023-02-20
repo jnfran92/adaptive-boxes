@@ -14,7 +14,7 @@ colors_list = list(colors.CSS4_COLORS .values())
 
 plt.ion()
 
-base_folder = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/postdata"
+base_folder = "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/2_group_intf_details"
 
 summary_groups_data_path = base_folder + '/' + 'summary_groups.csv'
 x_units_path = base_folder + '/' + 'x_units.csv'
@@ -230,4 +230,4 @@ for i in range(n_parts):
 plot_partitions(partitions)
 
 
-nx.write_gexf(G, "/Users/Juan/django_projects/gard/partitions/kl_bisection/output/hall/hall_2_partitions.gexf")
+nx.write_gexf(G, "/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/3_partitions.gexf")

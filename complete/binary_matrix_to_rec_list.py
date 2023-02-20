@@ -145,5 +145,5 @@ for x in range(len(best_set)):
     array_to_save[x, 2] = best_set[x].y1
     array_to_save[x, 3] = best_set[x].y2
 
-np.savetxt('/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/decomposition/samples/decomposition_n_20.csv',
+np.savetxt('/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/1_decomposition_rec_list.csv',
            np.array(recs), fmt='%s', delimiter=',')
