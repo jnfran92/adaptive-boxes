@@ -6,7 +6,7 @@ import numpy as np
 
 from itertools import cycle
 
-from graph.lib.PartitionRectangle import PartitionRectangle
+from legacy.graph.lib.PartitionRectangle import PartitionRectangle
 
 cycle_color = cycle('bgrcmk')
 

@@ -2,12 +2,11 @@ import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-from networkx.algorithms.community import kernighan_lin_bisection, greedy_modularity_communities, asyn_fluidc
 import numpy as np
 import metis
 
-from graph.lib.PartitionRectangle import PartitionRectangle
-from graph.lib.plot_tools import plot_rectangles
+from legacy.graph.lib.PartitionRectangle import PartitionRectangle
+from legacy.graph.lib.plot_tools import plot_rectangles
 
 # colors_list = list(colors._colors_full_map.values())
 colors_list = list(colors.CSS4_COLORS .values())

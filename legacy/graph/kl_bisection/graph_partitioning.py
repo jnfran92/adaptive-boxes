@@ -6,8 +6,8 @@ import pandas as pd
 from networkx.algorithms.community import kernighan_lin_bisection
 import numpy as np
 
-from graph.lib.PartitionRectangle import PartitionRectangle
-from graph.lib.plot_tools import plot_rectangles
+from legacy.graph.lib.PartitionRectangle import PartitionRectangle
+from legacy.graph.lib.plot_tools import plot_rectangles
 
 colors_list = list(colors._colors_full_map.values())
 
