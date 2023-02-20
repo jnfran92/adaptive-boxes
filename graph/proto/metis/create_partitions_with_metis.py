@@ -229,3 +229,5 @@ for i in range(n_parts):
 
 plot_partitions(partitions)
 
+
+nx.write_gexf(G, "/Users/Juan/django_projects/gard/partitions/kl_bisection/output/hall/hall_2_partitions.gexf")
