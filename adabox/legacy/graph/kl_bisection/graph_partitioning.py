@@ -1,15 +1,15 @@
+
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
+from networkx.algorithms.community import kernighan_lin_bisection
 import numpy as np
-import metis
 
-from legacy.graph.lib.PartitionRectangle import PartitionRectangle
-from legacy.graph.lib.plot_tools import plot_rectangles
+from adabox.legacy.graph.lib.PartitionRectangle import PartitionRectangle
+from adabox.legacy.graph.lib.plot_tools import plot_rectangles
 
-# colors_list = list(colors._colors_full_map.values())
-colors_list = list(colors.CSS4_COLORS .values())
+colors_list = list(colors._colors_full_map.values())
 
 plt.ion()
 
@@ -26,6 +26,7 @@ summary_groups = pd.read_csv(summary_groups_data_path)
 x_units = pd.read_csv(x_units_path)
 y_units = pd.read_csv(y_units_path)
 
+
 # Getting Codes x_units
 codes = []
 for iuy in x_units.iterrows():
@@ -40,10 +41,12 @@ for iuy in x_units.iterrows():
     # print(code_2)
     codes.append((code_1, code_2))
 
+
 codes_df = pd.DataFrame(codes)
 
 x_units['p0_code'] = codes_df[0]
 x_units['p1_code'] = codes_df[1]
+
 
 # Getting Codes y_units
 codes = []
@@ -58,6 +61,7 @@ for iuy in y_units.iterrows():
     code_2 = str(g_tmp) + "_" + str(p_tmp)
     # print(code_2)
     codes.append((code_1, code_2))
+
 
 codes_df = pd.DataFrame(codes)
 
@@ -82,6 +86,7 @@ for k0 in keys_tmp_level_0:
         print("         %d" % weight_tmp)
         edges.append((k0, k1, weight_tmp, color))
 
+
 #   y units
 color = 1
 gs_tmp = y_units.groupby('p0_code')
@@ -98,6 +103,7 @@ for k0 in keys_tmp_level_0:
         print("         %d" % weight_tmp)
         edges.append((k0, k1, float(weight_tmp), color))
 
+
 # n_total_nodes = global_keys_no_duplicates.__len__()
 
 
@@ -105,15 +111,17 @@ for k0 in keys_tmp_level_0:
 edges_df = pd.DataFrame(edges)
 edges_df.columns = ['p0', 'p1', 'Weight', 'color']
 
+
 # Creating Graph
 g = nx.Graph()
 
 # Add edges attributes
 for i, tmp_row in edges_df.iterrows():
-    g.add_edge(tmp_row[0], tmp_row[1], weight=int(tmp_row[2]), attr_dict=tmp_row[2:].to_dict())
+    g.add_edge(tmp_row[0], tmp_row[1], weight=tmp_row[2], attr_dict=tmp_row[2:].to_dict())
 
 n_total_nodes = g.number_of_nodes()
 global_keys_no_duplicates = list(g.nodes.keys())
+
 
 # Getting Node Attributes
 nodes_list = []
@@ -131,7 +139,7 @@ for k in global_keys_no_duplicates:
 
     area_tmp = smg_tmp['num_div_x'].iloc[0] * smg_tmp['num_div_y'].iloc[0]
     nodes_list.append(
-        (k, int(area_tmp),
+        (k, area_tmp,
          # x_tmp.iloc[0],
          # y_tmp.iloc[0],
          group_details_tmp["x1"].iloc[0],
@@ -143,33 +151,39 @@ for k in global_keys_no_duplicates:
          )
     )
 
+
 nodes_df = pd.DataFrame(nodes_list)
 nodes_df.columns = ['code', 'area', 'x1', 'x2', 'y1', 'y2', 'x', 'y']
 nodes_df = nodes_df.set_index('code')
 
+
 # Setting Areas
-# nx.set_node_attributes(g, nodes_df.transpose().to_dict())
-nx.set_node_attributes(g, nodes_df.to_dict('index'))
+nx.set_node_attributes(g, nodes_df.transpose().to_dict())
 
 print(g.number_of_nodes())
 print(g.number_of_edges())
 
+
 # Define data structure (list) of edge colors for plotting
 edge_colors = [e[2]['attr_dict']['color'] for e in g.edges(data=True)]
+
 
 # Define areas
 node_areas = nodes_df.to_dict()['area']
 
 # Define Positions
-node_positions = {node[0]: (
-node[1]['x1'] + abs(node[1]['x1'] - node[1]['x2']) / 2.0, node[1]['y1'] + abs(node[1]['y1'] - node[1]['y2']) / 2.0) for
-                  node in g.nodes(data=True)}
+node_positions = {node[0]: (node[1]['x1'] + abs(node[1]['x1'] - node[1]['x2'])/2.0, node[1]['y1'] + abs(node[1]['y1'] - node[1]['y2'])/2.0) for node in g.nodes(data=True)}
+
 
 # Plotting
 plt.figure(figsize=(8, 6))
-nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=5.0, node_color='black')
+nx.draw(g, edge_color=edge_colors, pos=node_positions, node_size=40.0, node_color='black')
 
-# KL-Algorithm
+#
+# # Save in gephi file
+# nx.write_gexf(g, "/Users/Juan/django_projects/gard/partitions/gexf/humboldt.gexf")
+
+
 # Graph Partitioning: Recursive Bisection
 G = g
 # info
@@ -178,55 +192,60 @@ print(G.edges)
 print(G.nodes(data=True))
 
 
-def plot_partitions(partitions_arg):
-    # Drawing
-    partition_list = []
-    partitions_tmp = partitions_arg
-    com_idx = 0
-    for com in partitions_tmp:
-        print(com)
-        print(com_idx)
-        partition_list.extend(list(map(lambda x: (x, {'color': colors_list[com_idx]}), com)))
-        com_idx += 1
+# Recursive bisection -  First Run (resulting in 2 partitions)
+partitions = kernighan_lin_bisection(G, weight='Weight')
 
-    # adding colors to dict
-    color_nodes_dict = dict(partition_list)
-    nx.set_node_attributes(G, color_nodes_dict)
-    node_color_map = [n[1]['color'] for n in G.nodes(data=True)]
+# Loop
+for i in range(0, 1):
+    pss = []
+    for p in partitions:
+        ps_tmp = kernighan_lin_bisection(G.subgraph(list(p)), weight='Weight')
+        pss.extend(ps_tmp)
 
-    # Creating Rectangles from Nodes (in this case: partition id matches with color code )
-    recs = []
-    for g_node_tmp in g.nodes.data(True):
-        values = g_node_tmp[1]
-        recs.append(
-            PartitionRectangle(values['x1'],
-                               values['x2'],
-                               values['y1'],
-                               values['y2'],
-                               values['color']
-                               )
-        )
-
-    plot_rectangles(recs)
+    partitions = pss
 
 
-G.graph['edge_weight_attr'] = 'weight'
-G.graph['node_weight_attr'] = 'area'
-
-n_parts = 8
-(edgecuts, parts) = metis.part_graph(G, n_parts)
-
-# get partitions
-nodes_list = np.array(list(G.nodes().keys()))
-parts_array = np.array(parts)
-
-partitions = []
-for i in range(n_parts):
-    print(i)
-    partitions.append(list(nodes_list[parts_array == i]))
+# Drawing
+partition_list = []
+partitions_tmp = partitions
+com_idx = 0
+for com in partitions_tmp:
+    print(com)
+    print(com_idx)
+    partition_list.extend(list(map(lambda x: (x, {'color': colors_list[com_idx]}), com)))
+    com_idx += 1
 
 
-plot_partitions(partitions)
+# adding colors to dict
+color_nodes_dict = dict(partition_list)
+nx.set_node_attributes(G, color_nodes_dict)
+node_color_map = [n[1]['color'] for n in G.nodes(data=True)]
+
+# printing
+# nx.draw_networkx_nodes(G, node_positions, node_color="#210070", alpha=0.9)
+# nx.draw(G, node_color=node_color_map, with_labels=False, pos=node_positions, node_size=80.0)
+
+# Creating Rectangles from Nodes (in this case: partition id matches with color code )
+recs = []
+for g_node_tmp in g.nodes.data(True):
+    values = g_node_tmp[1]
+    recs.append(
+        PartitionRectangle(values['x1'],
+                           values['x2'],
+                           values['y1'],
+                           values['y2'],
+                           values['color']
+                           )
+    )
+
+plot_rectangles(recs)
 
 
-nx.write_gexf(G, "/Users/Juan/django_projects/gard/partitions/kl_bisection/output/hall/hall_2_partitions.gexf")
+## Save
+# nx.write_gexf(g, "/Users/Juan/django_projects/adaptive-boxes/graphs/gexf/hall.gexf")
+
+# Save Partitions
+partitions_array = np.array(partitions)
+nx.write_gexf(g, "/Users/Juan/django_projects/gard/partitions/kl_bisection/output/hall/hall_2_partitions.gexf")
+# np.save("/Users/Juan/django_projects/gard/partitions/kl_bisection/output/humboldt/humboldt_kl_partitions_2.npy",
+#         partitions_array)

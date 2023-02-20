@@ -6,7 +6,7 @@ import numpy as np
 
 from itertools import cycle
 
-from legacy.graph.lib.PartitionRectangle import PartitionRectangle
+from adabox.legacy.graph.lib.PartitionRectangle import PartitionRectangle
 
 cycle_color = cycle('bgrcmk')
 

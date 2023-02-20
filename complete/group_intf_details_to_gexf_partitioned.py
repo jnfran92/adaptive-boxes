@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 import metis
 
-from legacy.graph.lib.PartitionRectangle import PartitionRectangle
-from legacy.graph.lib.plot_tools import plot_rectangles
+from adabox.legacy.graph.lib.PartitionRectangle import PartitionRectangle
+from adabox.legacy.graph.lib.plot_tools import plot_rectangles
 
 colors_list = list(colors._colors_full_map.values())
 # colors_list = list(colors.CSS4_COLORS .values())
