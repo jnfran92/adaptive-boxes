@@ -24,8 +24,8 @@ def delete_folder(path_tmp_arg):
 
 
 # Init - Load GEXF File
-data_path = "/adabox/complete/result/3_partitions.gexf"
-out_path_base = "/adabox/complete/result"
+data_path = "./adabox/complete/result/3_partitions.gexf"
+out_path_base = "./adabox/complete/result"
 model_name = "4_gpu_device_global_data"
 # SCALE: IMPORTANT MUST BE INT
 SCALE = 10/3
@@ -270,6 +270,4 @@ for idx, intf_of_device in intf_by_device:
                 intf_of_unit.sort_values(by='group_0').to_csv(device_tmp_path + "/x_units.csv", index=False)
             else:   # y=units
                 intf_of_unit.sort_values(by='group_0').to_csv(device_tmp_path + "/y_units.csv", index=False)
-
-
 

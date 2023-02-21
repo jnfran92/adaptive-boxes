@@ -80,18 +80,18 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
     return result[0], result[1], result[2]
 
 
-so_file = "/adabox/decomposition/cpp/getters_completed.so"
+so_file = "./adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = '/sample_data/humboldt_binary_matrix.csv'
+in_path = './sample_data/squares.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 20
+n_gpus = 14
 max_area = total_area / n_gpus
 
 # Plot demo data
@@ -145,5 +145,5 @@ for x in range(len(best_set)):
     array_to_save[x, 2] = best_set[x].y1
     array_to_save[x, 3] = best_set[x].y2
 
-np.savetxt('/Users/kolibri/PycharmProjects/adaptive-boxes/complete/result/1_decomposition_rec_list.csv',
+np.savetxt('/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/complete/result/1_decomposition_rec_list.csv',
            np.array(recs), fmt='%s', delimiter=',')
