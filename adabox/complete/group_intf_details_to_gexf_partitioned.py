@@ -1,3 +1,4 @@
+
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -213,7 +214,7 @@ def plot_partitions(partitions_arg):
 G.graph['edge_weight_attr'] = 'weight'
 G.graph['node_weight_attr'] = 'area'
 
-n_parts = 5
+n_parts = 8
 (edgecuts, parts) = metis.part_graph(G, n_parts)
 
 # get partitions

@@ -1,3 +1,4 @@
+
 import ctypes
 import random
 from timeit import default_timer as timer
@@ -84,14 +85,14 @@ so_file = "./adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = './sample_data/squares.csv'
+in_path = './sample_data/humboldt_binary_matrix.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 14
+n_gpus = 20
 max_area = total_area / n_gpus
 
 # Plot demo data
