@@ -85,14 +85,14 @@ so_file = "./adabox/decomposition/cpp/getters_completed.so"
 getters_so_lib = ctypes.CDLL(so_file)
 
 # Input Path
-in_path = './sample_data/humboldt_binary_matrix.csv'
+in_path = './sample_data/squares.csv'
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 20
+n_gpus = 12
 max_area = total_area / n_gpus
 
 # Plot demo data

@@ -29,7 +29,7 @@ out_path_base = "./adabox/complete/result"
 model_name = "4_gpu_device_global_data"
 # SCALE: IMPORTANT MUST BE INT
 # SCALE = 30/3
-SCALE = 1
+SCALE = 20
 
 # read data
 G = nx.read_gexf(data_path)
