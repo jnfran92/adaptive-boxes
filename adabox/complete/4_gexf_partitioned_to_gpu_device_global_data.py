@@ -11,7 +11,6 @@ import pandas as pd
 colors_list = list(colors._colors_full_map.values())
 
 
-
 def create_folder(path_tmp_arg):
     if not os.path.isdir(path_tmp_arg):
         os.makedirs(path_tmp_arg)
