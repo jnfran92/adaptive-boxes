@@ -7,16 +7,37 @@ import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import os
+import shutil
 
 from adabox.legacy.postproc_gpu.tools import create_groups, get_xy_units
+
+
+def create_folder(path_tmp_arg):
+    if not os.path.isdir(path_tmp_arg):
+        os.makedirs(path_tmp_arg)
+
+
+def delete_folder(path_tmp_arg):
+    try:
+        shutil.rmtree(path_tmp_arg)
+    except:
+        print("Error deleting %s" % path_tmp_arg)
+
 
 colors_list = list(colors._colors_full_map.values())
 
 in_path = "./adabox/complete/result/1_decomposition_rec_list.csv"  # .csv
 out_path = "./adabox/complete/result/2_group_intf_details"  # without extension
 
+
+# init - dont change it
+delete_folder(out_path)
+create_folder(out_path)
+
 data = np.array(pd.read_csv(in_path, header=None))
 sep_value = 1           # it is a constant because adabox GPU returns partitions with this value. DONT CHANGE!
+
 
 # data prepros adds boundaries to json rectangles
 groups_details, summary = create_groups(data, sep_value)

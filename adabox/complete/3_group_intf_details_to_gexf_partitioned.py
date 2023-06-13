@@ -14,7 +14,10 @@ colors_list = list(colors._colors_full_map.values())
 
 plt.ion()
 
-base_folder = "/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/complete/result/2_group_intf_details"
+# variables
+n_gpus = 5
+base_folder = "./adabox/complete/result/2_group_intf_details"
+out_path = "./adabox/complete/result/3_partitions.gexf"
 
 summary_groups_data_path = base_folder + '/' + 'summary_groups.csv'
 x_units_path = base_folder + '/' + 'x_units.csv'
@@ -214,7 +217,7 @@ def plot_partitions(partitions_arg):
 G.graph['edge_weight_attr'] = 'weight'
 G.graph['node_weight_attr'] = 'area'
 
-n_parts = 3
+n_parts = n_gpus
 (edgecuts, parts) = metis.part_graph(G, n_parts)
 
 # get partitions
@@ -230,4 +233,4 @@ for i in range(n_parts):
 plot_partitions(partitions)
 
 
-nx.write_gexf(G, "./adabox/complete/result/3_partitions.gexf")
+nx.write_gexf(G, out_path)

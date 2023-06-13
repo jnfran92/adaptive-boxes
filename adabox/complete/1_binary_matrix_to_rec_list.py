@@ -3,6 +3,8 @@ import ctypes
 import random
 from timeit import default_timer as timer
 import numpy as np
+import os
+import shutil
 
 from adabox.plot_tools import plot_rectangles, plot_rectangles_only_lines
 from adabox.tools import Rectangle
@@ -81,19 +83,40 @@ def find_rectangles_and_filter_the_best(random_points_arg, data_matrix_arg, lib_
     return result[0], result[1], result[2]
 
 
-so_file = "./adabox/decomposition/cpp/getters_completed.so"
-getters_so_lib = ctypes.CDLL(so_file)
+def create_folder(path_tmp_arg):
+    if not os.path.isdir(path_tmp_arg):
+        os.makedirs(path_tmp_arg)
+
+
+def delete_folder(path_tmp_arg):
+    try:
+        shutil.rmtree(path_tmp_arg)
+    except:
+        print("Error deleting %s" % path_tmp_arg)
+
 
 # Input Path
 in_path = './sample_data/squares.csv'
+
+# out file
+out_path = './adabox/complete/result/1_decomposition_rec_list.csv'
+
+# area ratio, use this to make a fine or coarse decomposition, greater ratio smaller rectangles
+area_ratio = 12
+
+
+# init code -  dont change it....
+delete_folder("./adabox/complete/result")
+create_folder("./adabox/complete/result")
+so_file = "./adabox/decomposition/cpp/getters_completed.so"
+getters_so_lib = ctypes.CDLL(so_file)
 
 # Load Demo data with columns [x_position y_position flag]
 data_matrix = np.loadtxt(in_path, delimiter=",")
 data_matrix = data_matrix.astype(np.intc)
 
 total_area = data_matrix.sum()
-n_gpus = 12
-max_area = total_area / n_gpus
+max_area = total_area / area_ratio
 
 # Plot demo data
 # plt.imshow(np.flip(data_matrix, axis=0), cmap='magma', interpolation='nearest')
@@ -146,5 +169,5 @@ for x in range(len(best_set)):
     array_to_save[x, 2] = best_set[x].y1
     array_to_save[x, 3] = best_set[x].y2
 
-np.savetxt('/Users/kolibri/PycharmProjects/adaptive-boxes/adabox/complete/result/1_decomposition_rec_list.csv',
-           np.array(recs), fmt='%s', delimiter=',')
+
+np.savetxt(out_path, np.array(recs), fmt='%s', delimiter=',')
