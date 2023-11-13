@@ -27,7 +27,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-            "certifi==2019.3.9",
+            "certifi==2022.12.7",
             "cycler==0.10.0",
             "kiwisolver==1.1.0",
             "matplotlib==3.1.1",
